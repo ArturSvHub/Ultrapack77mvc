@@ -12,11 +12,11 @@ namespace Ultrapack77mvc.Models
 		public string City { get; set; }
 		public string Street { get; set; }
 		public string HouseNumber { get; set; }
-		public int BuildingNumber { get; set; }
-		public int BuildingPartNumber { get; set; }
-		public int AppartmentNumber { get; set; }
-		public int OfficeNumber { get; set; }
-		public int RoomNumber { get; set; }
+		public int? BuildingNumber { get; set; }
+		public int? BuildingPartNumber { get; set; }
+		public int? AppartmentNumber { get; set; }
+		public int? OfficeNumber { get; set; }
+		public int? RoomNumber { get; set; }
 		public Customer Customer { get; set; }
 	}
 }
