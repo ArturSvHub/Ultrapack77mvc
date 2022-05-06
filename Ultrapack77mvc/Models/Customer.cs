@@ -12,7 +12,7 @@ namespace Ultrapack77mvc.Models
         public string? LastName { get; set; }
         public string Email { get; set; }
         public string? Phone { get; set; }
-        public byte[]? Photo { get; set; }
+        public string? PhotoPath { get; set; }
         public List<Order> Orders { get; set; }
         public List<Address> Addresses { get; set; }
     }
