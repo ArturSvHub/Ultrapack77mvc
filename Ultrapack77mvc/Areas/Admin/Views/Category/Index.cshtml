@@ -1,4 +1,4 @@
-@model IEnumerable<Ultrapack77mvc.Models.Category>
+﻿@model IEnumerable<Ultrapack77mvc.Models.Category>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,49 +6,97 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">������ ���������</h2>
+            <h2 class="text-primary">Категории товаров</h2>
         </div>
         <div class="col-6">
             <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
-                ������� ���������
-            </a> 
+               <i class="fa-solid fa-plus"></i> Добавить категорию
+            </a>
         </div>
     </div>
 
-@if(Model.Count()>0)
-{
-    <table class="table table-bordered table-striped" style="width:100%">
-        <thead>
-            <tr>
-                <th>
-                    �������� ���������
-                </th>
-                <th>
-                    �������� ���������
-                </th>
-                <th>
-                    ������������ ���������
-                </th>
-                <th>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                if(item.SubCategoryName is not null){
-                <tr>
-                <td width="30%">@item.Name</td>
-                 <td width="20%">@item.Description</td> 
-                 <td width="20%">@item.SubCategoryName</td>
-                 <td></td>
-            </tr>
-            }
-            }
-        </tbody>
-    </table>
-}
-else{
-    <p>��������� ���� ���</p>
-}
+    @if (Model.Count() > 0)
+    {
+
+        if ((Model.Where(c => c.IsMasterCategory == true)).Count() != 0)
+        {
+            <h6 style="margin-top:50px">Родительские категории</h6>
+            <table class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Название категории
+                        </th>
+                        <th>
+                            Описание категории
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(c => c.IsMasterCategory == true))
+                    {
+                        <tr>
+                            <td width="30%">@item.Name</td>
+                            <td width="20%">@item.Description</td>
+                            <td class="text-center">
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
+                                       <i class="fa-solid fa-square-sliders-vertical"></i> Изменить категорию
+                                    </a>
+                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
+                                       <i class="fa-solid fa-delete-left"></i> Удалить категорию
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <h6 style="margin-top:50px">Дочерние категории</h6>
+        }
+        if ((Model.Where(c => c.IsMasterCategory == false)).Count() != 0)
+        {
+            <table class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Название категории
+                        </th>
+                        <th>
+                            Описание категории
+                        </th>
+                        <th>
+                            Родительская категория
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(c => c.IsMasterCategory == false))
+                    {
+                        <tr>
+                            <td width="30%">@item.Name</td>
+                            <td width="20%">@item.Description</td>
+                            <td width="20%">@item.MasterCategoryName</td>
+                            <td class="text-center">
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
+                                        Изменить категорию
+                                    </a>
+                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
+                                        Удалить категорию
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+    else
+    {
+        <p>Нет категорий</p>
+    }
 </div>

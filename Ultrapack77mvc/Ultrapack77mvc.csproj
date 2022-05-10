@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Admin\Shared\**" />
+    <Content Remove="Areas\Admin\Shared\**" />
+    <EmbeddedResource Remove="Areas\Admin\Shared\**" />
+    <None Remove="Areas\Admin\Shared\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
@@ -18,8 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Shared\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\img\product\" />
   </ItemGroup>
 
 </Project>

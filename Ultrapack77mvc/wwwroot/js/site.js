@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿$('#isMasterCategory').on('click', function () {
+    if ($(this).prop('checked') === true) {
+        $('#ismaster').css('display', 'none');
+        $('#masterCheckValue').attr('name', 'True')
+    }
+    else {
+        $('#ismaster').css('display', 'block');
+        $('#masterCheckValue').attr('name','False')
+    }
+})
