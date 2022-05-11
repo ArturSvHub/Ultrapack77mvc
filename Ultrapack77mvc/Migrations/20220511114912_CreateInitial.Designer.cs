@@ -12,8 +12,8 @@ using Ultrapack77mvc.DataContext;
 namespace Ultrapack77mvc.Migrations
 {
     [DbContext(typeof(MssqlContext))]
-    [Migration("20220508214613_addProductModelTable")]
-    partial class addProductModelTable
+    [Migration("20220511114912_CreateInitial")]
+    partial class CreateInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -94,11 +94,14 @@ namespace Ultrapack77mvc.Migrations
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<bool?>("IsMasterCategory")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MasterCategoryName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubCategoryName")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -186,8 +189,8 @@ namespace Ultrapack77mvc.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()

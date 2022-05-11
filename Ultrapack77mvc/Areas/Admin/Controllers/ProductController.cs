@@ -37,7 +37,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				Product = new Product(),
 				CategorySelectedList = _context.Categories
-				.Where(c=>c.IsMasterCategory==false)
+				.Where(c => c.IsMasterCategory == false)
 				.Select(i => new SelectListItem
 				{
 					Text = i.Name,
@@ -57,7 +57,6 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 				}
 				return View(productVM);
 			}
-			return View(productVM);
 		}
 
 
@@ -67,59 +66,117 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult Upsert(ProductVM productVM)
 		{
-			var files = HttpContext.Request.Form.Files;
-			string webRootPath = _environment.WebRootPath;
-
-			if (productVM.Product.Id == 0)
+			if (ModelState.IsValid)
 			{
-				string upload = webRootPath + WebConstants.ProductImagePath;
-				string fileName = Guid.NewGuid().ToString();
-				string extention = Path.GetExtension(files[0].FileName);
+				var files = HttpContext.Request.Form.Files;
+				string webRootPath = _environment.WebRootPath;
 
-				using (var fileStream = new FileStream(
-					Path.Combine(upload, fileName + extention),
-					FileMode.Create))
-				{
-					files[0].CopyTo(fileStream);
-				};
-
-				productVM.Product.Image = fileName + extention;
-
-				_context.Add(productVM.Product);
-			}
-			else
-			{
-				var objFromDb = _context.Products.AsNoTracking().FirstOrDefault(x => 
-				x.Id == productVM.Product.Id);
-				if (files.Count > 0)
+				if (productVM.Product.Id == 0)
 				{
 					string upload = webRootPath + WebConstants.ProductImagePath;
 					string fileName = Guid.NewGuid().ToString();
 					string extention = Path.GetExtension(files[0].FileName);
 
-					var oldFile = Path.Combine(upload, objFromDb.Image);
-					if(System.IO.File.Exists(oldFile))
-					{
-						System.IO.File.Delete(oldFile);
-					}
-
 					using (var fileStream = new FileStream(
-					Path.Combine(upload, fileName + extention),
-					FileMode.Create))
+						Path.Combine(upload, fileName + extention),
+						FileMode.Create))
 					{
 						files[0].CopyTo(fileStream);
 					};
+
 					productVM.Product.Image = fileName + extention;
+
+					_context.Add(productVM.Product);
 				}
 				else
 				{
-					productVM.Product.Image = objFromDb.Image;
+					var objFromDb = _context.Products.AsNoTracking().FirstOrDefault(x =>
+					x.Id == productVM.Product.Id);
+					if (files.Count > 0)
+					{
+						string upload = webRootPath + WebConstants.ProductImagePath;
+						string fileName = Guid.NewGuid().ToString();
+						string extention = Path.GetExtension(files[0].FileName);
+
+						var oldFile = Path.Combine(upload, objFromDb.Image);
+						if (System.IO.File.Exists(oldFile))
+						{
+							System.IO.File.Delete(oldFile);
+						}
+
+						using (var fileStream = new FileStream(
+						Path.Combine(upload, fileName + extention),
+						FileMode.Create))
+						{
+							files[0].CopyTo(fileStream);
+						};
+						productVM.Product.Image = fileName + extention;
+					}
+					else
+					{
+						productVM.Product.Image = objFromDb.Image;
+					}
+					_context.Update(productVM.Product);
 				}
-				_context.Update(productVM.Product);
+				_context.SaveChanges();
+				return RedirectToAction(nameof(Index));
 			}
+			else
+			{
+				productVM.CategorySelectedList = _context.Categories
+					.Where(c => c.IsMasterCategory == false)
+					.Select(i => new SelectListItem
+					{
+						Text = i.Name,
+						Value = i.Id.ToString()
+					});
+				return View(productVM);
+			}
+		}
+
+
+
+
+		[Area("Admin")]
+		[HttpGet]
+		public IActionResult Delete(int? id)
+		{
+			if (id == null||id==0)
+			{
+				return NotFound();
+			}
+			Product product = _context.Products.Include(u=>u.Category)
+				.FirstOrDefault(u=>u.Id==id);
+			if(product==null)
+			{
+				return NotFound();
+			}
+			return View(product);
+
+		}
+		//POST - delete
+		[Area("Admin")]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeletePost(int? id)
+		{
+			var obj = _context.Products.Find(id);
+			if (obj==null)
+			{
+				return NotFound();
+			}
+			string upload = _environment.WebRootPath + WebConstants.ProductImagePath;
+
+			var oldFile = Path.Combine(upload, obj.Image);
+			if (System.IO.File.Exists(oldFile))
+			{
+				System.IO.File.Delete(oldFile);
+			}
+
+
+			_context.Products.Remove(obj);
 			_context.SaveChanges();
 			return RedirectToAction(nameof(Index));
 		}
-
 	}
 }
