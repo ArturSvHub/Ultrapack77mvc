@@ -3,5 +3,6 @@
 	public static class WebConstants
 	{
 		public static string ProductImagePath = @"\img\product\";
+		public static string CategoryImagePath = @"\img\category\";
 	}
 }

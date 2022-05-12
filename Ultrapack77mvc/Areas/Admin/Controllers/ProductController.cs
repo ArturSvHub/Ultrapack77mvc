@@ -37,7 +37,6 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				Product = new Product(),
 				CategorySelectedList = _context.Categories
-				.Where(c => c.IsMasterCategory == false)
 				.Select(i => new SelectListItem
 				{
 					Text = i.Name,
@@ -66,8 +65,8 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult Upsert(ProductVM productVM)
 		{
-			if (ModelState.IsValid)
-			{
+			//if (ModelState.IsValid)
+			//{
 				var files = HttpContext.Request.Form.Files;
 				string webRootPath = _environment.WebRootPath;
 
@@ -120,18 +119,18 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 				}
 				_context.SaveChanges();
 				return RedirectToAction(nameof(Index));
-			}
-			else
-			{
-				productVM.CategorySelectedList = _context.Categories
-					.Where(c => c.IsMasterCategory == false)
-					.Select(i => new SelectListItem
-					{
-						Text = i.Name,
-						Value = i.Id.ToString()
-					});
-				return View(productVM);
-			}
+			//}
+			//else
+			//{
+			//	productVM.CategorySelectedList = _context.Categories
+			//		.Where(c => c.IsMasterCategory == false)
+			//		.Select(i => new SelectListItem
+			//		{
+			//			Text = i.Name,
+			//			Value = i.Id.ToString()
+			//		});
+			//	return View(productVM);
+			//}
 		}
 
 

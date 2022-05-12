@@ -4,17 +4,25 @@ using Microsoft.EntityFrameworkCore;
 
 using Ultrapack77mvc.DataContext;
 using Ultrapack77mvc.Models;
+using Ultrapack77mvc.ViewModels;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
 	public class CategoryController : Controller
 	{
+		public CategoryVM categoryVM;
 		private readonly MssqlContext _context;
+		IWebHostEnvironment _environment;
 
-		public CategoryController(MssqlContext context)
+		public CategoryController(MssqlContext context, IWebHostEnvironment environment)
 		{
 			_context = context;
+			_environment = environment;
 		}
+
+
+
+
 
 		[Area("Admin")]
 		public async Task<IActionResult> Index()
@@ -26,105 +34,143 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[Area("Admin")]
 		public IActionResult Create()
 		{
-			List<string> catName = new List<string>();
-			ViewBag.CatList = _context.Categories.Where(c => c.IsMasterCategory == true)
-				.Select(c => c.Name).ToList();
-			return View();
+			CategoryVM categoryVM = new()
+			{
+				Category = new Category(),
+				CategorySelectedList = _context.Categories
+				.Where(c => c.IsMasterCategory == true)
+				.Select(i => new SelectListItem
+				{
+					Text = i.Name,
+					Value = i.Id.ToString()
+				})
+			};
+			return View(categoryVM);
 		}
-
+		//POST-Create
 		[Area("Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(Category obj)
+		public IActionResult Create(CategoryVM categoryVM)
 		{
-			if (ModelState.IsValid)
+			//if (ModelState.IsValid)
+			//{
+			var files = HttpContext.Request.Form.Files;
+			string webRootPath = _environment.WebRootPath;
+
+			string upload = webRootPath + WebConstants.CategoryImagePath;
+			string fileName = Guid.NewGuid().ToString();
+			string extention = Path.GetExtension(files[0].FileName);
+
+			using (var fileStream = new FileStream(
+				Path.Combine(upload, fileName + extention),
+				FileMode.Create))
 			{
-				await _context.AddAsync(obj);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
-			}
-			return View(obj);
+				files[0].CopyTo(fileStream);
+			};
+
+			categoryVM.Category.ImagePath = fileName + extention;
+
+			_context.Add(categoryVM.Category);
+			_context.SaveChanges();
+			return RedirectToAction(nameof(Index));
+			//}
+			//else
+			//{
+			//	categoryVM.CategorySelectedList = _context.Categories
+			//		.Where(c => c.IsMasterCategory == true)
+			//		.Select(i => new SelectListItem
+			//		{
+			//			Text = i.Name,
+			//			Value = i.Id.ToString()
+			//		});
+			//	return View(categoryVM);
+			//}
 		}
+
 		//GET-EDIT
 		[Area("Admin")]
 		[HttpGet]
-		public async Task<IActionResult> Edit(int? id)
+		public IActionResult Edit(int? id)
 		{
-			if (id == null || id == 0)
+			CategoryVM categoryVM = new CategoryVM()
 			{
-				return NotFound();
-			}
-			
-			var obj = await _context.Categories.FindAsync(id);
-			if(obj == null)
-			{
-				return NotFound();
-			}
-
-			IEnumerable<SelectListItem> CategoryDropDown = _context.Categories.Where(c => c.IsMasterCategory == true).Select(i =>
-			new SelectListItem
-			{
-				Text = i.Name,
-				Value = i.Id.ToString()
-			});
-			if (obj.MasterCategoryName is not null)
-			{
-				string ActiveItem = obj.MasterCategoryName;
-				foreach (var item in CategoryDropDown)
+				Category = new Category(),
+				CategorySelectedList = _context.Categories
+				.Select(i => new SelectListItem
 				{
-					if (item.Value == ActiveItem)
-					{
-						item.Selected = true;
-					}
+					Text = i.Name,
+					Value = i.Id.ToString()
+				})
+			};
+			if (id is null)
+			{
+				return View(categoryVM);
+			}
+			else
+			{
+				categoryVM.Category = _context.Categories.Find(id);
+				if (categoryVM.Category is null)
+				{
+					return NotFound();
 				}
+				return View(categoryVM);
 			}
-			ViewBag.CategoryName = obj.Name;
-			ViewBag.CategoryDescription=obj.Description;
-			ViewBag.CategoryDropDown = CategoryDropDown;
-			return View();
 		}
-		[Area("Admin")]
-		[HttpPost]
-		public async Task<IActionResult> Edit(Category obj)
-		{
-			if (ModelState.IsValid)
-			{
-				_context.Update(obj);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
-			}
-			return View(obj);
-		}
-		//GET-Delete
-		[Area("Admin")]
-		[HttpGet]
-		public async Task<IActionResult> Delete(int? id)
-		{
-			if (id == null || id == 0)
-			{
-				return NotFound();
-			}
 
-			var obj = await _context.Categories.FindAsync(id);
-			if (obj == null)
-			{
-				return NotFound();
-			}
-			return View(obj);
-		}
-		//POST-Delete
+		//POST-Edit
 		[Area("Admin")]
 		[HttpPost]
-		public async Task<IActionResult> DeletePost(int? id)
+		public IActionResult Edit(CategoryVM categoryVM)
 		{
-			var obj = await _context.Categories.FindAsync(id);
-			if (obj == null)
+			//if (ModelState.IsValid)
+			//{
+			var files = HttpContext.Request.Form.Files;
+			string webRootPath = _environment.WebRootPath;
+
+			var objFromDb = _context.Categories.AsNoTracking().FirstOrDefault(x =>
+			x.Id == categoryVM.Category.Id);
+			//ViewBag.MasterCatName = _context.Categories
+			//.FirstOrDefault(c => c.Id == objFromDb.MasterCategoryId).Name;
+			if (files.Count > 0)
 			{
-				return NotFound();
+				string upload = webRootPath + WebConstants.CategoryImagePath;
+				string fileName = Guid.NewGuid().ToString();
+				string extention = Path.GetExtension(files[0].FileName);
+
+				var oldFile = Path.Combine(upload, objFromDb.ImagePath);
+				if (System.IO.File.Exists(oldFile))
+				{
+					System.IO.File.Delete(oldFile);
+				}
+
+				using (var fileStream = new FileStream(
+				Path.Combine(upload, fileName + extention),
+				FileMode.Create))
+				{
+					files[0].CopyTo(fileStream);
+				};
+				categoryVM.Category.ImagePath = fileName + extention;
 			}
-				_context.Categories.Remove(obj);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+			else
+			{
+				categoryVM.Category.ImagePath = objFromDb.ImagePath;
+			}
+			_context.Update(categoryVM.Category);
+			_context.SaveChanges();
+			return RedirectToAction(nameof(Index));
+			//}
+			//else
+			//{
+			//	categoryVM.CategorySelectedList = _context.Categories
+			//		.Where(c => c.IsMasterCategory == true)
+			//		.Select(i => new SelectListItem
+			//		{
+			//			Text = i.Name,
+			//			Value = i.Id.ToString()
+			//		});
+			//	return View(categoryVM);
 		}
 	}
 }
+

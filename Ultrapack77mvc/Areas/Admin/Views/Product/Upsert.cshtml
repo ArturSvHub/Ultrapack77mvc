@@ -68,14 +68,8 @@
                     </div>
                     <div class="col-8">
                         <select asp-for="Product.CategoryId" class="form-select"
-                                asp-items="@Model.CategorySelectedList">
-                            @{
-                                if (Model.Product.Id != 0 && Model.CategorySelectedList != null)
-                                {
-
-                                }
-                            }
-                            <option value="" disabled="disabled" selected>Выберите категорию</option>
+                                asp-items="Model.CategorySelectedList">
+                            <option disabled selected>Выберите категорию</option>
                         </select>
                     </div>
                 </div>

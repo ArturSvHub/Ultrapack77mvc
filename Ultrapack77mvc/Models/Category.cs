@@ -14,6 +14,7 @@ namespace Ultrapack77mvc.Models
 		public bool? IsMasterCategory { get; set; } = false;
 		[DisplayName("Name of Master Category")]
 		public string? MasterCategoryName { get; set; }
+		public int? MasterCategoryId { get; set; }
 		public string? ImagePath { get; set; }
 		public List<Product>? Products { get; set; }
 	}
