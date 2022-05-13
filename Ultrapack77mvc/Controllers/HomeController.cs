@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using System.Diagnostics;
 
 using Ultrapack77mvc.DataContext;
 using Ultrapack77mvc.Models;
+using Ultrapack77mvc.ViewModels;
 
 namespace Ultrapack77mvc.Controllers
 {
@@ -19,7 +21,12 @@ namespace Ultrapack77mvc.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+			HomeVM homeVM = new HomeVM()
+			{
+				Products = _context.Products.Include(u => u.Category),
+				Categories = _context.Categories
+			};
+			return View(homeVM);
 		}
 
 		public IActionResult Privacy()

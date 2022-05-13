@@ -1,4 +1,4 @@
-﻿
+﻿@model Ultrapack77mvc.ViewModels.HomeVM
 @{
     ViewData["Title"] = "Index";
 }
@@ -37,7 +37,11 @@
         </div>
       </div>
       <div class="catalog">
-        <div class="catalog__card card">
+          @foreach (var catCards in Model.Categories.Where(c=>c.IsMasterCategory==true))
+          {
+              <partial name="_IndividualCategoryCard" model="catCards"/>
+          }
+        @*<div class="catalog__card card">
           <a href="#">
             <img src="~/img/cards/g.png" alt="">
             <span>гофрокартон в роликах</span>
@@ -102,7 +106,7 @@
             <img src="~/img/cards/v.png" alt="">
             <span>Ветошь обтирочная</span>
           </a>
-        </div>
+        </div>*@
       </div>
       <div class="content__description">
         <h3>Упаковочные материалы оптом в Москве</h3>

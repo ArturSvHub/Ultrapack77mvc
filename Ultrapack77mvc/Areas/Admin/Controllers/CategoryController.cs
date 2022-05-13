@@ -131,7 +131,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			var objFromDb = _context.Categories.AsNoTracking().FirstOrDefault(x =>
 			x.Id == categoryVM.Category.Id);
 			//ViewBag.MasterCatName = _context.Categories
-			//.FirstOrDefault(c => c.Id == objFromDb.MasterCategoryId).Name;
+			//.FirstOrDefault(c => c.Id == objFromDb.MasterCategoryId).Name;  
 			if (files.Count > 0)
 			{
 				string upload = webRootPath + WebConstants.CategoryImagePath;
@@ -170,6 +170,53 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			//			Value = i.Id.ToString()
 			//		});
 			//	return View(categoryVM);
+		}
+
+
+
+
+		//GET-Delete
+		[Area("Admin")]
+		[HttpGet]
+		public IActionResult Delete(int? id)
+		{
+			if (id == null || id == 0)
+			{
+				return NotFound();
+			}
+			Category? category = _context.Categories
+				.FirstOrDefault(u => u.Id == id);
+			if (category == null)
+			{
+				return NotFound();
+			}
+			return View(category);
+
+		}
+		//POST - delete
+		[Area("Admin")]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeletePost(int? id)
+		{
+
+			var obj = _context.Categories.Find(id);
+			if (obj == null)
+			{
+				return NotFound();
+			}
+			string upload = _environment.WebRootPath + WebConstants.CategoryImagePath;
+
+			var oldFile = Path.Combine(upload, obj.ImagePath);
+			if (System.IO.File.Exists(oldFile))
+			{
+				System.IO.File.Delete(oldFile);
+			}
+
+
+			_context.Categories.Remove(obj);
+			_context.SaveChanges();
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

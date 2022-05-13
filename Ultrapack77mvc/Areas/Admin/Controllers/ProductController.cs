@@ -144,7 +144,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
-			Product product = _context.Products.Include(u=>u.Category)
+			Product? product = _context.Products.Include(u=>u.Category)
 				.FirstOrDefault(u=>u.Id==id);
 			if(product==null)
 			{
@@ -159,6 +159,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult DeletePost(int? id)
 		{
+			
 			var obj = _context.Products.Find(id);
 			if (obj==null)
 			{
