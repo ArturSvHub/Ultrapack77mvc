@@ -33,5 +33,56 @@ namespace Ultrapack77mvc.Controllers
 		{
 			return View();
 		}
+		public IActionResult About()
+		{
+			return View();
+		}
+		public IActionResult Contacts()
+		{
+			return View();
+		}
+		public IActionResult Providers()
+		{
+			return View();
+		}
+		public IActionResult Services()
+		{
+			return View();
+		}
+		public IActionResult Wiki()
+		{
+			return View();
+		}
+		public IActionResult Details(int id)
+		{
+
+			HomeVM homeVM = new HomeVM()
+			{
+				Products = _context.Products.Include(u => u.Category),
+				Categories = _context.Categories
+			};
+			ViewBag.ParrentCategoryId = homeVM.Categories.FirstOrDefault(c=>c.Id==id);
+			return View(homeVM);
+		}
+		public IActionResult DetailsChild(int id)
+		{
+
+			HomeVM homeVM = new HomeVM()
+			{
+				Products = _context.Products.Include(u => u.Category),
+				Categories = _context.Categories
+			};
+			ViewBag.ThisId = homeVM.Categories.FirstOrDefault(c => c.Id == id).Id;
+			return View(homeVM);
+		}
+		public IActionResult Product(int id)
+		{
+
+			ProductCardVM productCardVM = new()
+			{
+				Product = _context.Products.Include(u => u.Category).FirstOrDefault(c => c.Id == id)
+			};
+			return View(productCardVM);
+		}
 	}
 }

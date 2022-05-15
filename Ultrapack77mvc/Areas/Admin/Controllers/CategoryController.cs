@@ -10,7 +10,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
 	public class CategoryController : Controller
 	{
-		public CategoryVM categoryVM;
+		
 		private readonly MssqlContext _context;
 		IWebHostEnvironment _environment;
 
@@ -37,13 +37,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			CategoryVM categoryVM = new()
 			{
 				Category = new Category(),
-				CategorySelectedList = _context.Categories
-				.Where(c => c.IsMasterCategory == true)
-				.Select(i => new SelectListItem
-				{
-					Text = i.Name,
-					Value = i.Id.ToString()
-				})
+				CategoriesForSelect = _context.Categories.Where(c=>c.ParentCategory==null).ToList()
 			};
 			return View(categoryVM);
 		}
@@ -96,12 +90,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			CategoryVM categoryVM = new CategoryVM()
 			{
 				Category = new Category(),
-				CategorySelectedList = _context.Categories
-				.Select(i => new SelectListItem
-				{
-					Text = i.Name,
-					Value = i.Id.ToString()
-				})
+				CategoriesForSelect = _context.Categories.Where(c => c.ParentCategory == null).ToList()
 			};
 			if (id is null)
 			{

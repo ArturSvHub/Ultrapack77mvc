@@ -24,7 +24,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
-			IEnumerable<Product> prodList = await _context.Products.ToListAsync();
+			IEnumerable<Product> prodList = await _context.Products.Include(c=>c.Category).ToListAsync();
 
 			return View(prodList);
 		}
@@ -67,6 +67,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		{
 			//if (ModelState.IsValid)
 			//{
+				productVM.Product.CreatedDateTime = DateTime.Now;
 				var files = HttpContext.Request.Form.Files;
 				string webRootPath = _environment.WebRootPath;
 

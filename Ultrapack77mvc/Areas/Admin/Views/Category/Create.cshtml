@@ -2,7 +2,6 @@
 @model Ultrapack77mvc.ViewModels.CategoryVM
 
 <form method="post" asp-action="Create" enctype="multipart/form-data">
-    <input asp-for="Category.IsMasterCategory" name="False" id="masterCheckValue" hidden />
     <div class="border p-3">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group row">
@@ -47,8 +46,11 @@
                 <div class="form-group row" id="ismaster">
                     
                     <div class="col-8">
-                        <select asp-for="Category.MasterCategoryId" class="form-select"
-                                asp-items="@Model.CategorySelectedList">
+                        <select asp-for="Category.ParentCategoryId" class="form-select">
+                                @foreach (var item in Model.CategoriesForSelect)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
                             <option value="" disabled="disabled" selected>Выберите родительскую категорию</option>
                         </select>
                     </div>

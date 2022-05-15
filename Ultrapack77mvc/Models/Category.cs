@@ -11,10 +11,9 @@ namespace Ultrapack77mvc.Models
 		public string? Description { get; set; }
 		[Required]
 		public string Name { get; set; }
-		public bool? IsMasterCategory { get; set; } = false;
-		[DisplayName("Name of Master Category")]
-		public string? MasterCategoryName { get; set; }
-		public int? MasterCategoryId { get; set; }
+		public int? ParentCategoryId { get; set; }
+		public Category? ParentCategory { get; set; }
+		public List<Category> ChildrenCategories { get; set; } = new();
 		public string? ImagePath { get; set; }
 		public List<Product>? Products { get; set; }
 	}
