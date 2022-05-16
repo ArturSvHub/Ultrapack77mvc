@@ -10,7 +10,7 @@
         </div>
         <div class="col-6">
             <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
-                Добавить Товар
+               <i class="fa-solid fa-plus"></i>
             </a>
         </div>
     </div>
@@ -51,10 +51,10 @@
                         <td>
                             <div class="w-75 btn-group" role="group">
                                 <a asp-controller="Product" asp-route-Id="@item.Id" asp-action="Upsert" class="btn btn-primary">
-                                    <i class="fa-solid fa-square-sliders-vertical"></i> Изменить товар
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                                 <a asp-controller="Product" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
-                                    <i class="fa-solid fa-delete-left"></i> Удалить товар
+                                    <i class="fa-solid fa-trash-can"></i>
                                 </a>
                             </div>
                         </td>

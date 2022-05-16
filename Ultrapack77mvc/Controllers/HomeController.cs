@@ -80,7 +80,19 @@ namespace Ultrapack77mvc.Controllers
 
 			ProductCardVM productCardVM = new()
 			{
-				Product = _context.Products.Include(u => u.Category).FirstOrDefault(c => c.Id == id)
+				Product = _context.Products.Include(u => u.Category)
+				.FirstOrDefault(c => c.Id == id)
+			};
+			return View(productCardVM);
+		}
+		[HttpPost,ActionName("Product")]
+		public IActionResult ProductPost(int id)
+		{
+
+			ProductCardVM productCardVM = new()
+			{
+				Product = _context.Products.Include(u => u.Category)
+				.FirstOrDefault(c => c.Id == id)
 			};
 			return View(productCardVM);
 		}

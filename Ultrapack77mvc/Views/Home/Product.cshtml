@@ -2,7 +2,7 @@
 
 <div class="">
     <form method="post">
-      
+      <input asp-for="@Model.Product.Id" hidden />
         <div class="container backgroundWhite pt-4"  >
             <div class="card" style="border:1px solid #000000; ">
                 <div class="card-header bg-dark text-light ml-0 row container" style="border-radius: 0px;">
@@ -45,7 +45,7 @@
                                <a asp-action="RemoveFromCart" asp-route-id="@Model.Product.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Удалить из корзины</a>
                            }else
                            {
-                            <button type="submit" class="btn btn-info form-control btn-lg" style="height:50px;">Add to Cart</button>
+                            <button type="submit"  class="btn btn-info form-control btn-lg" style="height:50px;">Add to Cart</button>
                            }
                         </div>
                     </div>

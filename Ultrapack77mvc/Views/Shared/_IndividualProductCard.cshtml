@@ -2,34 +2,35 @@
 @model Ultrapack77mvc.Models.Product
 
 
-<div class="catalog__card card">
+@*<div class="catalog__card card">
           <a asp-action="Product" asp-route-id=@Model.Id>
             <img src="@WebConstants.ProductImagePath@Model.Image" alt="">
             <span>@Model.Name</span>
+            <span class="text-info">@string.Format("{0:c0}",Model.RetailPrice)</span>
           </a>
-        </div>
+        </div>*@
 
-        @*<div class="col-lg-4 col-md-6 pb-4">
+        <div class="catalog__card card filter @Model.Category.Name.Replace(' ','_')">
             <!-- Card-->
             <div class="card bg-white rounded shadow-sm" style="border:1px solid #222">
-                <div class="card-body px-3 pt-3 pb-1 row">
-                    <div class="col-7"><label class="float-left">Product.Name</label></div>
-                    <div class="col-5"><label class="float-right"><span class="text-info h5">Product.Price</span> / sqft</label> </div>
+                <div class="card-body px-3 pt-3 pb-1">
+                    <div class="col-12"><label class="float-left">@Model.Name</label></div>
+                    <div class="col-5"><label class="float-right"><span class="text-info h5">@string.Format("{0:c0}",Model.RetailPrice)</span> M<sup>2</sup></label> </div>
                 </div>
-                <img class="card-img-top img-fluid d-block mx-auto mb-3" src="" alt="Card image cap">
+                <img class="card-img-top img-fluid d-block mx-auto mb-3" src="@WebConstants.ProductImagePath@Model.Image" alt="Card image cap">
                 <div class="card-body p-1 px-3 row">
                     <div class="col-6">
-                        <span class="badge p-2 border w-100" style="background-color:lavenderblush">Category.Name</span>
+                        <span class="p-2 border w-100"></span>
                     </div>
                 <div class="col-6 border-0">
-                    <span class="badge p-2 border w-100" style="background-color:aliceblue">ApplicationType.Name</span>
+                   <a asp-action="Details" asp-route-id="@Model.Category.ParentCategoryId"style="color:black" class="p-2 border w-100">@Model.Category.ParentCategory.Name</a>
                 </div>
-                <div class="col-12 pt-2" style="font-size:13px; text-align:justify" >
-                    <p> ShortDesc</p>
+                <div class="col-12 pt-2" style="font-size:5px; text-align:justify" >
+                    <p>@Html.Raw(Model.ShortDesc)</p>
                 </div>
                 <div class="col-12 p-1">
-                    <a class="btn btn-dark form-control btn-sm p-2" style="height:40px">View Details</a>
+                    <a asp-action="Product" asp-route-id=@Model.Id class="btn btn-dark p-2" style="height:40px">Подробнее</a>
                 </div>
                 </div>
             </div>
-        </div>*@
+        </div>
