@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using Ultrapack77mvc.Models;
 
 namespace Ultrapack77mvc.DataContext
 {
-	public class MssqlContext:DbContext
+	public class MssqlContext:IdentityDbContext
 	{
 		public MssqlContext(DbContextOptions<MssqlContext> options) : base(options)
 		{

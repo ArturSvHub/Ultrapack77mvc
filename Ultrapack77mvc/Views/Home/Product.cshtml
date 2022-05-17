@@ -1,7 +1,7 @@
 ﻿@model Ultrapack77mvc.ViewModels.ProductCardVM
 
 <div class="">
-    <form method="post">
+    <form method="post" >
       <input asp-for="@Model.Product.Id" hidden />
         <div class="container backgroundWhite pt-4"  >
             <div class="card" style="border:1px solid #000000; ">
@@ -45,7 +45,7 @@
                                <a asp-action="RemoveFromCart" asp-route-id="@Model.Product.Id" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Удалить из корзины</a>
                            }else
                            {
-                            <button type="submit"  class="btn btn-info form-control btn-lg" style="height:50px;">Add to Cart</button>
+                            <button type="submit" asp-route-id="@Model.Product.Id" class="btn btn-info btn-lg" style="height:50px;">Добавить в корзину</button>
                            }
                         </div>
                     </div>
