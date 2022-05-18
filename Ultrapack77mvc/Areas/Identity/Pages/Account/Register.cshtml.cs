@@ -19,12 +19,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
+using Ultrapack77mvc.Models;
+
 namespace Ultrapack77mvc.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -32,12 +35,14 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
@@ -86,7 +91,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Пароль")]
             public string Password { get; set; }
 
             /// <summary>
@@ -94,14 +99,24 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "Повтор пароля")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-        }
+
+            [Display(Name = "Имя")]
+			public string FullName { get; set; }
+
+		}
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+			if (!await _roleManager.RoleExistsAsync(WebConstants.AdminRole))
+			{
+                await _roleManager.CreateAsync(new IdentityRole(WebConstants.AdminRole));
+                await _roleManager.CreateAsync(new IdentityRole(WebConstants.CustomerRole));
+            }
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -112,7 +127,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                var user = new UltrapackUser {UserName = Input.FullName,Email = Input.Email, FullName = Input.FullName};
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -120,6 +135,15 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    if(User.IsInRole(WebConstants.AdminRole))
+					{
+                        await _userManager.AddToRoleAsync(user, WebConstants.AdminRole);
+                    }
+					else
+					{
+                        await _userManager.AddToRoleAsync(user, WebConstants.CustomerRole);
+                    }
+                    
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -158,7 +182,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<UltrapackUser>();
             }
             catch
             {

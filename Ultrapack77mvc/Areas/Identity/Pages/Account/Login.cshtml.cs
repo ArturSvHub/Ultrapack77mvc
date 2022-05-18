@@ -97,7 +97,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
+            
             ReturnUrl = returnUrl;
         }
 

@@ -8,8 +8,10 @@ var connectionString = builder.Configuration.GetConnectionString("Default") ?? t
 builder.Services.AddDbContext<MssqlContext>(options =>
     options.UseSqlServer(connectionString));;
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options=>
+options.SignIn.RequireConfirmedAccount = false)
+	.AddDefaultTokenProviders()
+	.AddDefaultUI()
 	.AddEntityFrameworkStores<MssqlContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();

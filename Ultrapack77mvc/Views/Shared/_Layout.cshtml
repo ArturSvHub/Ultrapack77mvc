@@ -66,28 +66,32 @@
           <nav class="header__menu">
             <ul class="header__list">
               <li>
-                <a asp-action="Home" class="header__link">Главная</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="header__link">Главная</a>
               </li>
               <li>
-                <a asp-action="Services" class="header__link">Услуги</a>
+                <a asp-area="" asp-controller="Home" asp-action="Services" class="header__link">Услуги</a>
               </li>
               <li>
-                <a asp-action="Wiki" class="header__link">О продукции</a>
+                <a asp-area="" asp-controller="Home" asp-action="Wiki" class="header__link">О продукции</a>
               </li>
               <li>
-                <a asp-action="Providers" class="header__link">Поставщикам</a>
+                <a asp-area="" asp-controller="Home" asp-action="Providers" class="header__link">Поставщикам</a>
               </li>
               <li>
-                <a asp-action="About" class="header__link">О компании</a>
+                <a asp-area="" asp-controller="Home" asp-action="About" class="header__link">О компании</a>
               </li>
               <li>
-                <a asp-action="Contacts" class="header__link">Контакты</a>
+                <a asp-area="" asp-controller="Home" asp-action="Contacts" class="header__link">Контакты</a>
               </li>
             </ul>
           </nav>
         </div>
       </div>
       <partial name="_LoginPartial" />
+       @if(User.IsInRole(WebConstants.AdminRole))
+    {
+         <a asp-area="Identity" asp-page="/Account/Register">Создать Администратора</a>
+    }
     </header>
     <div class="content">
             @RenderBody()
@@ -116,12 +120,12 @@
         </div>
         <div class="footer__links">
           <p>Быстрые ссылки</p> 
-            <li><a asp-action="Home">Главная</a></li>
-            <li><a asp-action="Services">Услуги</a></li>
-            <li><a asp-action="Wiki">О продукции</a></li>
-            <li><a asp-action="Providers">Поставщикам</a></li>
-            <li><a asp-action="About">О компании</a></li>
-            <li><a asp-action="Contacts">Контакты</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Index">Главная</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Services">Услуги</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Wiki">О продукции</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Providers">Поставщикам</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="About">О компании</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Contacts">Контакты</a></li>
           </ul>
         </div>
         <div class="footer__form">
