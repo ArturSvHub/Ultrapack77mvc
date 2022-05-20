@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Ultrapack77mvc.DataContext;
+using Ultrapack77mvc.Utility.EmailServices;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("UpakGkultraConnextion") ?? throw new InvalidOperationException("Connection string 'MssqlContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("Default") ?? throw new InvalidOperationException("Connection string 'MssqlContextConnection' not found.");
 
 builder.Services.AddDbContext<MssqlContext>(options =>
     options.UseSqlServer(connectionString));;
@@ -13,6 +15,7 @@ options.SignIn.RequireConfirmedAccount = false)
 	.AddDefaultTokenProviders()
 	.AddDefaultUI()
 	.AddEntityFrameworkStores<MssqlContext>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
@@ -32,7 +35,6 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
