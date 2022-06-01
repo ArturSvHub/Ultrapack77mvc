@@ -25,8 +25,6 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 
 
-
-
 		
 		public async Task<IActionResult> Index()
 		{

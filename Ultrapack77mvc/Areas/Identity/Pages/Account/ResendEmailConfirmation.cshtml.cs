@@ -64,7 +64,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+                ModelState.AddModelError(string.Empty, "Отправлено электронное письмо с подтверждением. Пожалуйста, проверьте свою электронную почту.");
                 return Page();
             }
 
@@ -78,10 +78,10 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.Email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "Подтвердите адрес электронной почты",
+                $"Пожалуйста, подтвердите свою учетную запись с помощью <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>данной ссылки</a>.");
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+            ModelState.AddModelError(string.Empty, "Отправлено электронное письмо с подтверждением. Пожалуйста, проверьте свою электронную почту.");
             return Page();
         }
     }

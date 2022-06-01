@@ -54,7 +54,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             [BindProperty]
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "Recovery Code")]
+            [Display(Name = "Код восстановления")]
             public string RecoveryCode { get; set; }
         }
 
@@ -64,7 +64,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                throw new InvalidOperationException($"Не удалось загрузить пользователя с двухфакторной аутентификацией.");
             }
 
             ReturnUrl = returnUrl;
@@ -82,7 +82,7 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+                throw new InvalidOperationException($"Не удалось загрузить пользователя с двухфакторной аутентификацией.");
             }
 
             var recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
@@ -93,18 +93,18 @@ namespace Ultrapack77mvc.Areas.Identity.Pages.Account
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.Id);
+                _logger.LogInformation("Пользователь с идентификатором '{ userId}' вошел в систему с кодом восстановления.", user.Id);
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             if (result.IsLockedOut)
             {
-                _logger.LogWarning("User account locked out.");
+                _logger.LogWarning("Учетная запись пользователя заблокирована.");
                 return RedirectToPage("./Lockout");
             }
             else
             {
-                _logger.LogWarning("Invalid recovery code entered for user with ID '{UserId}' ", user.Id);
-                ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+                _logger.LogWarning("Неверный код восстановления, введенный для пользователя с идентификатором '{userId}' ", user.Id);
+                ModelState.AddModelError(string.Empty, "Введен неверный код восстановления.");
                 return Page();
             }
         }
