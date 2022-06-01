@@ -8,7 +8,7 @@ namespace Ultrapack77mvc.ViewModels
 		{
 			ProductList = new List<Product>();
 		}
-		public IEnumerable<Product> ProductList { get; set; }
+		public IList<Product> ProductList { get; set; }
         public UltrapackUser ApplicationUser { get; set; }
     }
 }

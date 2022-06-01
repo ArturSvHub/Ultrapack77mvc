@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Ultrapack77mvc.ViewModels;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
+	[Authorize(Roles = WebConstants.AdminRole)]
 	public class ProductController : Controller
 	{
 		private readonly MssqlContext _context;

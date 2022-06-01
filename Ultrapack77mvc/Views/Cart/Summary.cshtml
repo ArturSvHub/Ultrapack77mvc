@@ -55,7 +55,7 @@
                                         <label>Email</label>
                                     </div>
                                     <div class="col-9">
-                                         <input asp-for="ApplicationUser.Email" type="text" class="form-control" />
+                                        <input asp-for="ApplicationUser.Email" type="text" class="form-control" />
                                         <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -66,14 +66,17 @@
                                         <span class="text-info">Заказ:</span>
                                     </h4>
                                     <ul class="list-group mb-3">
-                                        @foreach (var item in Model.ProductList)
+                                        @for (int i=0;i<Model.ProductList.Count();i++)
                                         {
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <div>
-                                                <h6 class="my-0">@item.Name</h6>
-                                                <small class="text-muted">Цена за 1: @item.RetailPrice</small>
-                                            </div>
-                                        </li>
+                                            <input type="hidden" asp-for="@Model.ProductList[i].Id" />
+                                            <input type="hidden" asp-for="@Model.ProductList[i].Name" />
+
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="my-0">@Model.ProductList[i].Name</h6>
+                                                    <small class="text-muted">Цена за 1: @Model.ProductList[i].RetailPrice</small>
+                                                </div>
+                                            </li>
                                         }
                                     </ul>
                                 </div>
@@ -95,6 +98,6 @@
 
 
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }
 

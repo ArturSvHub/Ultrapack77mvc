@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,8 @@ using Ultrapack77mvc.ViewModels;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
+	[Area("Admin")]
+	[Authorize(Roles = WebConstants.AdminRole)]
 	public class CategoryController : Controller
 	{
 		
@@ -24,14 +27,14 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 
 
-		[Area("Admin")]
+		
 		public async Task<IActionResult> Index()
 		{
 			IEnumerable<Category> catList = await _context.Categories.ToListAsync();
 			return View(catList);
 		}
 		//GET - Create
-		[Area("Admin")]
+		
 		public IActionResult Create()
 		{
 			CategoryVM categoryVM = new()
@@ -42,7 +45,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			return View(categoryVM);
 		}
 		//POST-Create
-		[Area("Admin")]
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Create(CategoryVM categoryVM)
@@ -83,7 +86,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		}
 
 		//GET-EDIT
-		[Area("Admin")]
+
 		[HttpGet]
 		public IActionResult Edit(int? id)
 		{
@@ -108,7 +111,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		}
 
 		//POST-Edit
-		[Area("Admin")]
+
 		[HttpPost]
 		public IActionResult Edit(CategoryVM categoryVM)
 		{
@@ -165,7 +168,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 
 		//GET-Delete
-		[Area("Admin")]
+
 		[HttpGet]
 		public IActionResult Delete(int? id)
 		{
@@ -183,7 +186,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 		}
 		//POST - delete
-		[Area("Admin")]
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult DeletePost(int? id)

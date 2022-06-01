@@ -9,7 +9,7 @@
             <h2 class="text-primary">Категории товаров</h2>
         </div>
         <div class="col-6">
-            <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+            <a asp-area="Admin" asp-controller="Category" asp-action="Create" class="btn btn-primary">
                Добавить
             </a>
         </div>
@@ -40,10 +40,10 @@
                             <td width="20%">@item.Description</td>
                             <td class="text-center">
                                 <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
                                         Изменить категорию
                                     </a>
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
                                         Удалить категорию
                                     </a>
                                 </div>
@@ -81,10 +81,10 @@
                             <td width="20%">@item.ParentCategory.Name</td>
                             <td class="text-center">
                                 <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
                                         Изменить категорию
                                     </a>
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
                                         Удалить категорию
                                     </a>
                                 </div>

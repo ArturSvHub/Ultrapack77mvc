@@ -10,8 +10,13 @@ var connectionString = builder.Configuration.GetConnectionString("Default") ?? t
 builder.Services.AddDbContext<MssqlContext>(options =>
     options.UseSqlServer(connectionString));;
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options=>
-options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
+	options.SignIn.RequireConfirmedAccount = true;
+	options.Password.RequiredLength = 5;
+	options.Password.RequireNonAlphanumeric = false;
+	options.Password.RequireUppercase = false;
+	options.Password.RequireDigit = false;
+})
 	.AddDefaultTokenProviders()
 	.AddDefaultUI()
 	.AddEntityFrameworkStores<MssqlContext>();

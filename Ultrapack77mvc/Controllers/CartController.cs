@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Claims;
+using System.Text;
 
 using Ultrapack77mvc.DataContext;
 using Ultrapack77mvc.Models;
@@ -14,12 +16,16 @@ namespace Ultrapack77mvc.Controllers
 	public class CartController : Controller
 	{
 		private readonly MssqlContext _context;
+		private readonly IWebHostEnvironment _environment;
+		private readonly IEmailSender _emailSender;
 		[BindProperty]
 		public ProductUserVM ProductUserVM { get; set; }
 
-		public CartController(MssqlContext context)
+		public CartController(MssqlContext context,IWebHostEnvironment environment,IEmailSender emailSender)
 		{
 			_context = context;
+			_environment=environment;
+			_emailSender=emailSender;
 		}
 
 		public IActionResult Index()
@@ -66,6 +72,42 @@ namespace Ultrapack77mvc.Controllers
 			return View(ProductUserVM); 
 		}
 
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[ActionName("Summary")]
+		public async Task<IActionResult> SummaryPost(ProductUserVM productUserVM)
+		{
+			var PathToTemplate = _environment.WebRootPath + Path.DirectorySeparatorChar.ToString() +
+				"templates" + Path.DirectorySeparatorChar.ToString() +
+				"inquiry.html";
+			var subject = "Новый заказ";
+			string HtmlBody = "";
+			using(StreamReader sr = System.IO.File.OpenText(PathToTemplate))
+			{
+				HtmlBody = sr.ReadToEnd();
+			}
+			StringBuilder productListSB = new StringBuilder();
+			foreach(var item in productUserVM.ProductList)
+			{
+				productListSB.Append($" - {item.Name} <span style='font-size:14px;' (ID: {item.Id})</span></br>");
+			}
+			string messageBody = string.Format(HtmlBody,
+				ProductUserVM.ApplicationUser.FullName,
+				ProductUserVM.ApplicationUser.Email,
+				ProductUserVM.ApplicationUser.PhoneNumber,
+				productListSB.ToString()
+				);
+
+			await _emailSender.SendEmailAsync(WebConstants.EmailForEnquires,subject,messageBody);
+
+			return RedirectToAction(nameof(InquiryConfirm));
+		}
+		public IActionResult InquiryConfirm()
+		{
+			HttpContext.Session.Clear();
+			return View();
+		}
 		public IActionResult Remove(int id)
 		{
 			List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();

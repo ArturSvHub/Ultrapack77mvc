@@ -17,7 +17,7 @@ namespace Ultrapack77mvc.Utility.EmailServices
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Администрация сайта", "login@yandex.ru"));
+            emailMessage.From.Add(new MailboxAddress("Администрация сайта upak77.ru", "upak@gkultra.ru"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -27,8 +27,8 @@ namespace Ultrapack77mvc.Utility.EmailServices
 
             using(var client = new SmtpClient())
             {
-                await client.ConnectAsync("smtp.yandex.ru", 25, false);
-                await client.AuthenticateAsync("archey.net@ya.ru", "Vedanieya2022.");
+                await client.ConnectAsync("mail.hosting.reg.ru", 25, false);
+                await client.AuthenticateAsync("upak@gkultra.ru", "Upaksite2022.");
                 await client.SendAsync(emailMessage);
 
                 await client.DisconnectAsync(true);
