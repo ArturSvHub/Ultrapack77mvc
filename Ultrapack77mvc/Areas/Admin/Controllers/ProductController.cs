@@ -39,6 +39,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				Product = new Product(),
 				CategorySelectedList = _context.Categories
+				.Where(c=>c.ParentCategory!=null)
 				.Select(i => new SelectListItem
 				{
 					Text = i.Name,

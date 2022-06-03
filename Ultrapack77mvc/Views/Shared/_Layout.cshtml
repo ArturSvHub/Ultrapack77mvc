@@ -71,9 +71,9 @@
               <li>
                 <a asp-area="" asp-controller="Home" asp-action="Services" class="header__link">Услуги</a>
               </li>
-              <li>
+              <!--<li>
                 <a asp-area="" asp-controller="Home" asp-action="Wiki" class="header__link">О продукции</a>
-              </li>
+              </li>-->
               <li>
                 <a asp-area="" asp-controller="Home" asp-action="Providers" class="header__link">Поставщикам</a>
               </li>
@@ -91,6 +91,7 @@
        @if(User.IsInRole(WebConstants.AdminRole))
     {
          <a asp-area="Identity" asp-page="/Account/Register">Создать Администратора</a>
+         <a asp-area="Admin" asp-controller="Home" asp-action="Index">Перейти в админ-панель</a>
     }
     </header>
     <div class="content">

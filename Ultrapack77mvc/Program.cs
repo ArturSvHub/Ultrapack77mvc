@@ -5,7 +5,7 @@ using Ultrapack77mvc.DataContext;
 using Ultrapack77mvc.Utility.EmailServices;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("Default") ?? throw new InvalidOperationException("Connection string 'MssqlContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("UpakGkultraConnextion") ?? throw new InvalidOperationException("Connection string 'MssqlContextConnection' not found.");
 
 builder.Services.AddDbContext<MssqlContext>(options =>
     options.UseSqlServer(connectionString));;
@@ -47,8 +47,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapRazorPages();
+//app.MapAreaControllerRoute(
+//	name:"Admin",
+//	areaName:"Admin",
+//	pattern: "admin/{controller=Home}/{action=Index}/{id?}"
+//	);
 app.MapControllerRoute(
-	name:"Admin",
+	name: "Admin",
 	pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(

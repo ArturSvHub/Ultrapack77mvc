@@ -3,40 +3,6 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="slider__wrapper">
-        <div class="slider">
-          <div class="item">
-            <img src="~/img/slide1.jpg" alt="Первый слайд">
-            <div class="slider__text">Заголовок слайда 1</div>
-          </div>
-
-          <div class="item">
-            <img src="~/img/slide2.jpg" alt="Второй слайд">
-            <div class="slider__text">Заголовок слайда 2</div>
-          </div>
-
-          <div class="item">
-            <img src="~/img/slide3.jpg" alt="Третий слайд">
-            <div class="slider__text">Заголовок слайда 3</div>
-          </div>
-
-          <div class="item">
-            <img src="~/img/slide4.png" alt="Четвертый слайд">
-            <div class="slider__text">Заголовок слайда 4</div>
-          </div>
-
-          <a class="prev" onclick="minusSlide()">&#10094;</a>
-          <a class="next" onclick="plusSlide()">&#10095;</a>
-        </div>
-        <br>
-
-        <div class="slider__dots">
-          <span class="slider__dots-item" onclick="currentSlide(1)"></span>
-          <span class="slider__dots-item" onclick="currentSlide(2)"></span>
-          <span class="slider__dots-item" onclick="currentSlide(3)"></span>
-          <span class="slider__dots-item" onclick="currentSlide(4)"></span>
-        </div>
-      </div>
       <div class="catalog">
           @foreach (var catCards in Model.Categories.Where(c=>c.ParentCategory==ViewBag.ParrentCategoryId))
           {

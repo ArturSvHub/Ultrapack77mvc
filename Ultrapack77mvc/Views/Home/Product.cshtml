@@ -10,7 +10,7 @@
                         <h1 class="text-white">@Model.Product.Name</h1>
                     </div>
                     <div class="col-12 col-md-6 text-md-right">
-                        <h1 class="text-warning" >@Model.Product.RetailPrice.ToString()</h1>
+                        <h1 class="text-warning" >@string.Format("{0:c0}",Model.Product.RetailPrice) - шт</h1>
                     </div>
                 </div>
                 <div class="card-body">
@@ -23,7 +23,7 @@
                                 <div class="row pl-3">
 
                                     <div class="col-12">
-                                        <span class="badge p-3 border" style="background-color:lavenderblush">@Model.Product.Category.Name</span>
+                                        <span class="p-3 border" style="background-color:lavenderblush">@Model.Product.Category.Name</span>
                                         <h3 class="text-success"></h3>
 
                                         <p class="text-secondary">@Html.Raw(Model.Product.Description)</p>
