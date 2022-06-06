@@ -2,11 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using UpakUtilitiesLibrary;
-using UpakDataAccessLibrary.DataContext;
-using UpakModelsLibrary.Models;
-using UpakModelsLibrary.Models.ViewModels;
-using UpakDataAccessLibrary.Repository.IRepository;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
@@ -14,7 +9,9 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 	[Authorize(Roles = WebConstants.AdminRole)]
 	public class CategoryController : Controller
 	{
+		
 		private readonly MssqlContext _context;
+		IWebHostEnvironment _environment;
 
 		private readonly IWebHostEnvironment _environment;
 
@@ -169,7 +166,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		//GET-Delete
 
 		[HttpGet]
-		public async Task<IActionResult> Delete(int? id)
+		public IActionResult Delete(int? id)
 		{
 			if (id == null || id == 0)
 			{
