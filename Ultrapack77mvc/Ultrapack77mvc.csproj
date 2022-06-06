@@ -14,19 +14,139 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="wwwroot\img\product\" />
+    <Folder Include="wwwroot\img\category\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\img\admin\icons\account-secure.svg" />
+    <None Include="wwwroot\img\admin\icons\bills.svg" />
+    <None Include="wwwroot\img\admin\icons\card-credit.svg" />
+    <None Include="wwwroot\img\admin\icons\card-debit.svg" />
+    <None Include="wwwroot\img\admin\icons\card-secure.svg" />
+    <None Include="wwwroot\img\admin\icons\code-scan.svg" />
+    <None Include="wwwroot\img\admin\icons\codes.svg" />
+    <None Include="wwwroot\img\admin\icons\connect-secure.svg" />
+    <None Include="wwwroot\img\admin\icons\customize.svg" />
+    <None Include="wwwroot\img\admin\icons\devices.svg" />
+    <None Include="wwwroot\img\admin\icons\doc-checked.svg" />
+    <None Include="wwwroot\img\admin\icons\emails.svg" />
+    <None Include="wwwroot\img\admin\icons\excel.svg" />
+    <None Include="wwwroot\img\admin\icons\file-doc.svg" />
+    <None Include="wwwroot\img\admin\icons\file-excel.svg" />
+    <None Include="wwwroot\img\admin\icons\file-media.svg" />
+    <None Include="wwwroot\img\admin\icons\file-pdf.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-code-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-code.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-doc-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-doc.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-media-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-media.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-movie-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-movie.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-music-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-music.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-pdf-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-pdf.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-ppt-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-ppt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-sheet-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-sheet.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-text-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-text.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-zip-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\file-type-zip.svg" />
+    <None Include="wwwroot\img\admin\icons\file-word.svg" />
+    <None Include="wwwroot\img\admin\icons\file-zip.svg" />
+    <None Include="wwwroot\img\admin\icons\folder-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\folder-secure-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\folder-secure.svg" />
+    <None Include="wwwroot\img\admin\icons\folder-shared-alt.svg" />
+    <None Include="wwwroot\img\admin\icons\folder-shared.svg" />
+    <None Include="wwwroot\img\admin\icons\folder.svg" />
+    <None Include="wwwroot\img\admin\icons\help-desk.svg" />
+    <None Include="wwwroot\img\admin\icons\id-back.svg" />
+    <None Include="wwwroot\img\admin\icons\id-front.svg" />
+    <None Include="wwwroot\img\admin\icons\invoice.svg" />
+    <None Include="wwwroot\img\admin\icons\kyc-dv.svg" />
+    <None Include="wwwroot\img\admin\icons\kyc-nid.svg" />
+    <None Include="wwwroot\img\admin\icons\kyc-pp.svg" />
+    <None Include="wwwroot\img\admin\icons\loop.svg" />
+    <None Include="wwwroot\img\admin\icons\password-secure.svg" />
+    <None Include="wwwroot\img\admin\icons\plan-s1.svg" />
+    <None Include="wwwroot\img\admin\icons\plan-s2.svg" />
+    <None Include="wwwroot\img\admin\icons\plan-s3.svg" />
+    <None Include="wwwroot\img\admin\icons\product-cc.svg" />
+    <None Include="wwwroot\img\admin\icons\product-ee.svg" />
+    <None Include="wwwroot\img\admin\icons\product-ig.svg" />
+    <None Include="wwwroot\img\admin\icons\product-pp.svg" />
+    <None Include="wwwroot\img\admin\icons\product-sc.svg" />
+    <None Include="wwwroot\img\admin\icons\profile.svg" />
+    <None Include="wwwroot\img\admin\icons\recheck.svg" />
+    <None Include="wwwroot\img\admin\icons\reports.svg" />
+    <None Include="wwwroot\img\admin\icons\settings.svg" />
+    <None Include="wwwroot\img\admin\icons\support-account.svg" />
+    <None Include="wwwroot\img\admin\icons\support-general.svg" />
+    <None Include="wwwroot\img\admin\icons\support-payment.svg" />
+    <None Include="wwwroot\img\admin\icons\support-secure.svg" />
+    <None Include="wwwroot\img\admin\icons\support.svg" />
+    <None Include="wwwroot\img\admin\icons\sync.svg" />
+    <None Include="wwwroot\img\admin\icons\zip.svg" />
+    <None Include="wwwroot\js\vendors\jquery-steps\jquery.steps.js" />
+    <None Include="wwwroot\js\vendors\jquery-steps\jquery.steps.min.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\jquery.vmap.min.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\continents\jquery.vmap.africa.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\continents\jquery.vmap.asia.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\continents\jquery.vmap.australia.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\continents\jquery.vmap.europe.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\continents\jquery.vmap.north-america.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\continents\jquery.vmap.south-america.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.algeria.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.argentina.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.brazil.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.canada.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.europe.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.france.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.germany.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.greece.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.iran.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.iraq.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.russia.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.tunisia.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.turkey.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.usa.js" />
+    <None Include="wwwroot\js\vendors\jqvmap\maps\jquery.vmap.world.js" />
+    <None Include="wwwroot\js\vendors\knob\jquery.knob.js" />
+    <None Include="wwwroot\js\vendors\knob\jquery.knob.min.js" />
+    <None Include="wwwroot\js\vendors\nioapp\nioapp.min.js" />
+    <None Include="wwwroot\js\vendors\prettify.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UpakDataAccessLibrary\UpakDataAccessLibrary.csproj" />
+    <ProjectReference Include="..\UpakModelsLibrary\UpakModelsLibrary.csproj" />
+    <ProjectReference Include="..\UpakUtilitiesLibrary\UpakUtilitiesLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\js\bundle.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\js\scripts.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Ultrapack77mvc.Models.Category>
+﻿@model IEnumerable<UpakModelsLibrary.Models.Category>
 @{
     ViewData["Title"] = "Index";
 }
@@ -9,8 +9,8 @@
             <h2 class="text-primary">Категории товаров</h2>
         </div>
         <div class="col-6">
-            <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
-               <i class="fa-solid fa-plus"></i> Добавить категорию
+            <a asp-area="Admin" asp-controller="Category" asp-action="Create" class="btn btn-primary">
+               Добавить
             </a>
         </div>
     </div>
@@ -18,7 +18,7 @@
     @if (Model.Count() > 0)
     {
 
-        if ((Model.Where(c => c.IsMasterCategory == true)).Count() != 0)
+        if ((Model.Where(c => c.ParentCategory == null)).Count() != 0)
         {
             <h6 style="margin-top:50px">Родительские категории</h6>
             <table class="table table-bordered table-striped" style="width:100%">
@@ -33,18 +33,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Where(c => c.IsMasterCategory == true))
+                    @foreach (var item in Model.Where(c => c.ParentCategory == null))
                     {
                         <tr>
                             <td width="30%">@item.Name</td>
                             <td width="20%">@item.Description</td>
                             <td class="text-center">
                                 <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
-                                       <i class="fa-solid fa-square-sliders-vertical"></i> Изменить категорию
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
+                                        Изменить категорию
                                     </a>
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
-                                       <i class="fa-solid fa-delete-left"></i> Удалить категорию
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
+                                        Удалить категорию
                                     </a>
                                 </div>
                             </td>
@@ -54,7 +54,7 @@
             </table>
             <h6 style="margin-top:50px">Дочерние категории</h6>
         }
-        if ((Model.Where(c => c.IsMasterCategory == false)).Count() != 0)
+        if ((Model.Where(c => c.ParentCategory != null)).Count() != 0)
         {
             <table class="table table-bordered table-striped" style="width:100%">
                 <thead>
@@ -73,18 +73,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Where(c => c.IsMasterCategory == false))
+                    @foreach (var item in Model.Where(c => c.ParentCategory != null))
                     {
                         <tr>
                             <td width="30%">@item.Name</td>
                             <td width="20%">@item.Description</td>
-                            <td width="20%">@item.MasterCategoryName</td>
+                            <td width="20%">@item.ParentCategory.Name</td>
                             <td class="text-center">
                                 <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
                                         Изменить категорию
                                     </a>
-                                    <a asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
+                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
                                         Удалить категорию
                                     </a>
                                 </div>

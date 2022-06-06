@@ -1,5 +1,5 @@
-﻿@using Ultrapack77mvc
-@model Ultrapack77mvc.ViewModels.ProductVM
+﻿@using UpakUtilitiesLibrary
+@model UpakModelsLibrary.Models.ViewModels.ProductVM
 @{
     var title = "Добавить товар";
 }
@@ -68,14 +68,8 @@
                     </div>
                     <div class="col-8">
                         <select asp-for="Product.CategoryId" class="form-select"
-                                asp-items="@Model.CategorySelectedList">
-                            @{
-                                if (Model.Product.Id != 0 && Model.CategorySelectedList != null)
-                                {
-
-                                }
-                            }
-                            <option value="" disabled="disabled" selected>Выберите категорию</option>
+                                asp-items="Model.CategorySelectedList">
+                            <option disabled selected>Выберите категорию</option>
                         </select>
                     </div>
                 </div>
@@ -103,8 +97,11 @@
             </div>
             <div class="col-4">
                 @* Keep this empty *@
-                <img src="@WebConstants.ProductImagePath@Model.Product.Image" 
-                width="100%" style="border-radius:5px;border:1px solid #bbb"/>
+                @if (Model.Product.Id != 0)
+                {
+                    <img src="@WebConstants.ProductImagePath@Model.Product.Image"
+                     width="100%" style="border-radius:5px;border:1px solid #bbb" />
+                }
             </div>
         </div>
     </div>
@@ -114,23 +111,34 @@
     @{
     <partial name="_ValidationScriptsPartial" />
     }
-    <script>
-        $(document).ready(function() {
-            $('.summernote').summernote({
-                height:250,
-                lang:'ru-RU'
-            });
-});
-        function validateInput() {
-            if (document.getElementById("uploadBox").value == "") {
-                Swal.fire(
-                    'Ошибка!',
-                    'Пожалуйста, загрузите изображение',
-                    'error'
-                )
-                return false;
-            }
-            return true;
-        }
-    </script>
-                                 }
+<script>
+              $(document).ready(function() {
+                  $('.summernote').summernote({
+                      height:200,
+                      lang:'ru-RU',
+                      toolbar: [
+      // [groupName, [list of button]]
+      ['style', ['bold', 'italic', 'underline', 'clear']],
+      ['font', ['strikethrough', 'superscript', 'subscript']],
+      ['fontsize', ['fontsize']],
+      ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']]
+    ]
+                  });
+      });
+              function validateInput()
+              {
+                  if (document.getElementById("uploadBox").value == "")
+                  {
+                      Swal.fire(
+                          'Ошибка!',
+                          'Пожалуйста, загрузите изображение',
+                          'error'
+                      )
+                      return false;
+                  }
+                  return true;
+              }
+</script>
+}

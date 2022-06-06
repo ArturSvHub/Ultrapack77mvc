@@ -1,72 +1,97 @@
-﻿@model Ultrapack77mvc.Models.Category
+﻿@using UpakUtilitiesLibrary
+@model UpakModelsLibrary.Models.ViewModels.CategoryVM
 
-<form method="post" action="Edit" >
-    <input asp-for="IsMasterCategory" name="False" id="masterCheckValue" hidden />
-    <input asp-for="Id" hidden />
+<form method="post" action="Edit" enctype="multipart/form-data">
+
+    <input asp-for="Category.Id" hidden />
     <div class="border p-3">
         <div class="form-group row">
             <h2 class="text-info p-lg-3">Изменить категорию</h2>
         </div>
-        <div class="row">
-            <div class="col-8">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="IsMasterCategory" value="True" id="isMasterCategory">
-                    <label class="form-check-label" for="isMasterCategory">
-                        Главная категория
-                    </label>
-                </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Name"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="Name" value="@ViewBag.CategoryName" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-
-                </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Description"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="Description" value="@ViewBag.CategoryDescription" class="form-control" />
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="form-group row" id="ismaster">
-                    <div class="col-4">
-                        <label asp-for="MasterCategoryName"></label>
-                    </div>
-                    <div class="col-8">
-                        <select asp-for="MasterCategoryName" class="form-select"
-                                asp-items="@ViewBag.CategoryDropDown">
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4 row">
-
-                        <div class="col">
-                            <input type="submit" class="btn btn-info w-100" value="Изменить" />
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100">
-                                Назад
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="form-group row">
             <div class="col-4">
+                <label asp-for="Category.Name"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Category.Name" class="form-control" />
+                <span asp-validation-for="Category.Name" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-4">
+                <label asp-for="Category.Description"></label>
+            </div>
+            <div class="col-8">
+                <input asp-for="Category.Description" class="form-control" />
+                <span asp-validation-for="Category.Description" class="text-danger"></span>
             </div>
         </div>
+        <div class="form-group row">
+            <div class="col-4">
+                image
+            </div>
+            <div class="col-8">
+                <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group row" id="ismaster">
+            <div class="col-4">
+                <label asp-for="Category.ParentCategory"></label>
+            </div>
+            <div class="col-8">
+                <select asp-for="Category.ParentCategoryId" class="form-select">
+                                @foreach (var item in Model.CategoriesForSelect)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            <option value="" disabled="disabled" selected>Выберите родительскую категорию</option>
+                        </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-8 offset-4 row">
+
+                <div class="col">
+                    <input type="submit" class="btn btn-info w-100" value="Изменить" />
+                </div>
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success w-100">
+                        Назад
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        @if (Model.Category.Id != 0)
+        {
+            <img src="@WebConstants.CategoryImagePath@Model.Category.ImagePath"
+             width="100%" style="border-radius:5px;border:1px solid #bbb" />
+        }
+    </div>
+    </div>
     </div>
 </form>
 
 @section Scripts{
     @{
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
     }
-                            }
+<script>
+    function validateInput()
+    {
+        if (document.getElementById("uploadBox").value == "")
+        {
+            Swal.fire(
+                'Ошибка!',
+                'Пожалуйста, загрузите изображение',
+                'error'
+            )
+            return false;
+        }
+        return true;
+    }
+</script>
+} 

@@ -1,102 +1,173 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
-using Ultrapack77mvc.DataContext;
-using Ultrapack77mvc.Models;
+using UpakUtilitiesLibrary;
+using UpakDataAccessLibrary.DataContext;
+using UpakModelsLibrary.Models;
+using UpakModelsLibrary.Models.ViewModels;
+using UpakDataAccessLibrary.Repository.IRepository;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
+	[Area("Admin")]
+	[Authorize(Roles = WebConstants.AdminRole)]
 	public class CategoryController : Controller
 	{
 		private readonly MssqlContext _context;
 
-		public CategoryController(MssqlContext context)
+		private readonly IWebHostEnvironment _environment;
+
+		public CategoryController(MssqlContext catContext, IWebHostEnvironment environment)
 		{
-			_context = context;
+			_context = catContext;
+			_environment = environment;
 		}
 
-		[Area("Admin")]
-		public async Task<IActionResult> Index()
+
+
+		
+		public IActionResult Index()
 		{
-			IEnumerable<Category> catList = await _context.Categories.ToListAsync();
+			IEnumerable<Category> catList = _context.Categories;
 			return View(catList);
 		}
 		//GET - Create
-		[Area("Admin")]
-		public IActionResult Create()
+		
+		public async Task<IActionResult> Create()
 		{
-			List<string> catName = new List<string>();
-			ViewBag.CatList = _context.Categories.Where(c => c.IsMasterCategory == true)
-				.Select(c => c.Name).ToList();
-			return View();
+			CategoryVM categoryVM = new()
+			{
+				Category = new Category(),
+				CategoriesForSelect =await _context.Categories.Where(c=>c.ParentCategory==null).ToListAsync()
+			};
+			return View(categoryVM);
 		}
+		//POST-Create
 
-		[Area("Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(Category obj)
+		public async Task<IActionResult> Create(CategoryVM categoryVM)
 		{
-			if (ModelState.IsValid)
+			//if (ModelState.IsValid)
+			//{
+			var files = HttpContext.Request.Form.Files;
+			string webRootPath = _environment.WebRootPath;
+
+			string upload = webRootPath + WebConstants.CategoryImagePath;
+			string fileName = Guid.NewGuid().ToString();
+			string extention = Path.GetExtension(files[0].FileName);
+
+			using (var fileStream = new FileStream(
+				Path.Combine(upload, fileName + extention),
+				FileMode.Create))
 			{
-				await _context.AddAsync(obj);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
-			}
-			return View(obj);
-		}
-		//GET-EDIT
-		[Area("Admin")]
-		[HttpGet]
-		public async Task<IActionResult> Edit(int? id)
-		{
-			if (id == null || id == 0)
-			{
-				return NotFound();
-			}
-			
-			var obj = await _context.Categories.FindAsync(id);
-			if(obj == null)
-			{
-				return NotFound();
+				files[0].CopyTo(fileStream);
 			}
 
-			IEnumerable<SelectListItem> CategoryDropDown = _context.Categories.Where(c => c.IsMasterCategory == true).Select(i =>
-			new SelectListItem
-			{
-				Text = i.Name,
-				Value = i.Id.ToString()
-			});
-			if (obj.MasterCategoryName is not null)
-			{
-				string ActiveItem = obj.MasterCategoryName;
-				foreach (var item in CategoryDropDown)
-				{
-					if (item.Value == ActiveItem)
-					{
-						item.Selected = true;
-					}
-				}
-			}
-			ViewBag.CategoryName = obj.Name;
-			ViewBag.CategoryDescription=obj.Description;
-			ViewBag.CategoryDropDown = CategoryDropDown;
-			return View();
+			categoryVM.Category.ImagePath = fileName + extention;
+
+			await _context.AddAsync(categoryVM.Category);
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
+			//}
+			//else
+			//{
+			//	categoryVM.CategorySelectedList = _context.Categories
+			//		.Where(c => c.IsMasterCategory == true)
+			//		.Select(i => new SelectListItem
+			//		{
+			//			Text = i.Name,
+			//			Value = i.Id.ToString()
+			//		});
+			//	return View(categoryVM);
+			//}
 		}
-		[Area("Admin")]
-		[HttpPost]
-		public async Task<IActionResult> Edit(Category obj)
+
+		//GET-EDIT
+
+		[HttpGet]
+		public async Task<IActionResult> Edit(int id)
 		{
-			if (ModelState.IsValid)
+			CategoryVM categoryVM = new CategoryVM()
 			{
-				_context.Update(obj);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+				Category = new Category(),
+				CategoriesForSelect =await _context.Categories.Where(c => c.ParentCategory == null).ToListAsync()
+			};
+			if (id == 0)
+			{
+				return View(categoryVM);
 			}
-			return View(obj);
+			else
+			{
+				categoryVM.Category =await _context.Categories.FindAsync(id);
+				if (categoryVM.Category is null)
+				{
+					return NotFound();
+				}
+				return View(categoryVM);
+			}
 		}
+
+		//POST-Edit
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(CategoryVM categoryVM)
+		{
+			//if (ModelState.IsValid)
+			//{
+			var files = HttpContext.Request.Form.Files;
+			string webRootPath = _environment.WebRootPath;
+
+			var objFromDb = _context.Categories.AsNoTracking().FirstOrDefault(x =>
+			x.Id == categoryVM.Category.Id);
+			//ViewBag.MasterCatName = _context.Categories
+			//.FirstOrDefault(c => c.Id == objFromDb.MasterCategoryId).Name;  
+			if (files.Count > 0)
+			{
+				string upload = webRootPath + WebConstants.CategoryImagePath;
+				string fileName = Guid.NewGuid().ToString();
+				string extention = Path.GetExtension(files[0].FileName);
+
+				var oldFile = Path.Combine(upload, objFromDb.ImagePath);
+				if (System.IO.File.Exists(oldFile))
+				{
+					System.IO.File.Delete(oldFile);
+				}
+
+				using (var fileStream = new FileStream(
+				Path.Combine(upload, fileName + extention),
+				FileMode.Create))
+				{
+					files[0].CopyTo(fileStream);
+				};
+				categoryVM.Category.ImagePath = fileName + extention;
+			}
+			else
+			{
+				categoryVM.Category.ImagePath = objFromDb.ImagePath;
+			}
+			_context.Categories.Update(categoryVM.Category);
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
+			//}
+			//else
+			//{
+			//	categoryVM.CategorySelectedList = _context.Categories
+			//		.Where(c => c.IsMasterCategory == true)
+			//		.Select(i => new SelectListItem
+			//		{
+			//			Text = i.Name,
+			//			Value = i.Id.ToString()
+			//		});
+			//	return View(categoryVM);
+		}
+
+
+
+
 		//GET-Delete
-		[Area("Admin")]
+
 		[HttpGet]
 		public async Task<IActionResult> Delete(int? id)
 		{
@@ -104,27 +175,39 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
-
-			var obj = await _context.Categories.FindAsync(id);
-			if (obj == null)
+			Category? category =await _context.Categories.FindAsync(id.GetValueOrDefault());
+			if (category == null)
 			{
 				return NotFound();
 			}
-			return View(obj);
+			return View(category);
+
 		}
-		//POST-Delete
-		[Area("Admin")]
+		//POST - delete
+
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeletePost(int? id)
 		{
-			var obj = await _context.Categories.FindAsync(id);
+
+			var obj =await _context.Categories.FindAsync(id.GetValueOrDefault());
 			if (obj == null)
 			{
 				return NotFound();
 			}
-				_context.Categories.Remove(obj);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+			string upload = _environment.WebRootPath + WebConstants.CategoryImagePath;
+
+			var oldFile = Path.Combine(upload, obj.ImagePath);
+			if (System.IO.File.Exists(oldFile))
+			{
+				System.IO.File.Delete(oldFile);
+			}
+
+
+			_context.Remove(obj);
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }
+
