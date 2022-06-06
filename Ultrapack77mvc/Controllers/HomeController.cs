@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using System.Diagnostics;
-
-using Ultrapack77mvc.DataContext;
-using Ultrapack77mvc.Models;
-using Ultrapack77mvc.Utility.Extentions;
-using Ultrapack77mvc.ViewModels;
+using UpakUtilitiesLibrary;
+using UpakDataAccessLibrary.DataContext;
+using UpakModelsLibrary.Models;
+using UpakUtilitiesLibrary.Utility.Extentions;
+using UpakModelsLibrary.Models.ViewModels;
 
 namespace Ultrapack77mvc.Controllers
 {

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Ultrapack77mvc.DataContext;
-using Ultrapack77mvc.Utility.EmailServices;
+using UpakDataAccessLibrary.DataContext;
+using UpakUtilitiesLibrary.Utility.EmailServices;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("UpakGkultraConnextion") ?? throw new InvalidOperationException("Connection string 'MssqlContextConnection' not found.");
