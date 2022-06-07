@@ -1,14 +1,10 @@
 ﻿@model UpakModelsLibrary.Models.ViewModels.HomeVM
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Товары";
 }
 
       <div class="catalog">
-          @foreach (var catCards in Model.Categories.Where(c=>c.ParentCategory==ViewBag.ParrentCategoryId))
-          {
-              <partial name="_IndividualCategoryChildrenCard" model="catCards"/>
-          }
-          @foreach (var prodCards in Model.Products.Where(p=>p.CategoryId==ViewBag.ThisId))
+          @foreach (var prodCards in Model.Products)
           {
               <partial name="_IndividualProductCard" model="prodCards"/>
           }

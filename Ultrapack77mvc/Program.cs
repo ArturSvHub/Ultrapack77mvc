@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using UpakDataAccessLibrary.DataContext;
-using UpakDataAccessLibrary.Repository;
-using UpakDataAccessLibrary.Repository.IRepository;
 
 using UpakUtilitiesLibrary.Utility.EmailServices;
 
@@ -24,8 +22,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
 	.AddDefaultUI()
 	.AddEntityFrameworkStores<MssqlContext>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(opts =>
@@ -34,8 +30,8 @@ builder.Services.AddSession(opts =>
 	opts.Cookie.HttpOnly = true;
 	opts.Cookie.IsEssential = true;
 });
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,11 +48,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapRazorPages();
-//app.MapAreaControllerRoute(
-//	name:"Admin",
-//	areaName:"Admin",
-//	pattern: "admin/{controller=Home}/{action=Index}/{id?}"
-//	);
 app.MapControllerRoute(
 	name: "Admin",
 	pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");

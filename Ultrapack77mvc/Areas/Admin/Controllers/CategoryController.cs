@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using UpakDataAccessLibrary.DataContext;
+using UpakModelsLibrary.Models;
+using UpakModelsLibrary.Models.ViewModels;
+
+using UpakUtilitiesLibrary;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
@@ -11,7 +15,6 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 	{
 		
 		private readonly MssqlContext _context;
-		IWebHostEnvironment _environment;
 
 		private readonly IWebHostEnvironment _environment;
 
@@ -31,12 +34,12 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		}
 		//GET - Create
 		
-		public async Task<IActionResult> Create()
+		public IActionResult Create()
 		{
 			CategoryVM categoryVM = new()
 			{
 				Category = new Category(),
-				CategoriesForSelect =await _context.Categories.Where(c=>c.ParentCategory==null).ToListAsync()
+				CategoriesForSelect = _context.Categories.ToList()
 			};
 			return View(categoryVM);
 		}
@@ -44,7 +47,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(CategoryVM categoryVM)
+		public IActionResult Create(CategoryVM categoryVM)
 		{
 			//if (ModelState.IsValid)
 			//{
@@ -64,32 +67,21 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 			categoryVM.Category.ImagePath = fileName + extention;
 
-			await _context.AddAsync(categoryVM.Category);
-			await _context.SaveChangesAsync();
+			_context.Add(categoryVM.Category);
+			_context.SaveChanges();
 			return RedirectToAction(nameof(Index));
-			//}
-			//else
-			//{
-			//	categoryVM.CategorySelectedList = _context.Categories
-			//		.Where(c => c.IsMasterCategory == true)
-			//		.Select(i => new SelectListItem
-			//		{
-			//			Text = i.Name,
-			//			Value = i.Id.ToString()
-			//		});
-			//	return View(categoryVM);
-			//}
+			
 		}
 
 		//GET-EDIT
 
 		[HttpGet]
-		public async Task<IActionResult> Edit(int id)
+		public IActionResult Edit(int id)
 		{
 			CategoryVM categoryVM = new CategoryVM()
 			{
 				Category = new Category(),
-				CategoriesForSelect =await _context.Categories.Where(c => c.ParentCategory == null).ToListAsync()
+				CategoriesForSelect =_context.Categories.ToList()
 			};
 			if (id == 0)
 			{
@@ -97,7 +89,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			}
 			else
 			{
-				categoryVM.Category =await _context.Categories.FindAsync(id);
+				categoryVM.Category =_context.Categories.FirstOrDefault(x=>x.Id==id);
 				if (categoryVM.Category is null)
 				{
 					return NotFound();
@@ -109,17 +101,14 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		//POST-Edit
 
 		[HttpPost]
-		public async Task<IActionResult> Edit(CategoryVM categoryVM)
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(CategoryVM categoryVM)
 		{
-			//if (ModelState.IsValid)
-			//{
 			var files = HttpContext.Request.Form.Files;
 			string webRootPath = _environment.WebRootPath;
 
 			var objFromDb = _context.Categories.AsNoTracking().FirstOrDefault(x =>
 			x.Id == categoryVM.Category.Id);
-			//ViewBag.MasterCatName = _context.Categories
-			//.FirstOrDefault(c => c.Id == objFromDb.MasterCategoryId).Name;  
 			if (files.Count > 0)
 			{
 				string upload = webRootPath + WebConstants.CategoryImagePath;
@@ -144,20 +133,9 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				categoryVM.Category.ImagePath = objFromDb.ImagePath;
 			}
-			_context.Categories.Update(categoryVM.Category);
-			await _context.SaveChangesAsync();
+			_context.Update(categoryVM.Category);
+			_context.SaveChanges();
 			return RedirectToAction(nameof(Index));
-			//}
-			//else
-			//{
-			//	categoryVM.CategorySelectedList = _context.Categories
-			//		.Where(c => c.IsMasterCategory == true)
-			//		.Select(i => new SelectListItem
-			//		{
-			//			Text = i.Name,
-			//			Value = i.Id.ToString()
-			//		});
-			//	return View(categoryVM);
 		}
 
 
@@ -166,7 +144,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		//GET-Delete
 
 		[HttpGet]
-		public IActionResult Delete(int? id)
+		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null || id == 0)
 			{

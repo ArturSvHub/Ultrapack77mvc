@@ -4,7 +4,7 @@
     var title = "Добавить товар";
 }
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
     @if (Model != null)
     {
         title = "Изменить товар";

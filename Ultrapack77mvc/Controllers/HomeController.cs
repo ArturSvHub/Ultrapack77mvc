@@ -63,8 +63,6 @@ namespace Ultrapack77mvc.Controllers
 				Products = _context.Products.Include(u => u.Category),
 				Categories = _context.Categories
 			};
-			ViewBag.ParrentCategoryId = homeVM.Categories.FirstOrDefault(c=>c.Id==id);
-			ViewBag.ThisId = homeVM.Categories.FirstOrDefault(c => c.Id == id).Id;
 			return View(homeVM);
 		}
 		public IActionResult DetailsChild(int id)

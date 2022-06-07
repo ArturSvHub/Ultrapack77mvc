@@ -2,14 +2,6 @@
 @model UpakModelsLibrary.Models.Product
 
 
-@*<div class="catalog__card card">
-          <a asp-action="Product" asp-route-id=@Model.Id>
-            <img src="@WebConstants.ProductImagePath@Model.Image" alt="">
-            <span>@Model.Name</span>
-            <span class="text-info">@string.Format("{0:c0}",Model.RetailPrice)</span>
-          </a>
-        </div>*@
-
         <div class="catalog__card card filter @Model.Category.Name.Replace(' ','_')">
             <!-- Card-->
             <div class="card bg-white rounded shadow-sm" style="border:1px solid #222">
@@ -23,7 +15,7 @@
                         <span class="p-2 border w-100"></span>
                     </div>
                 <div class="col-6 border-0">
-                   <a asp-action="Details" asp-route-id="@Model.Category.ParentCategoryId"style="color:black" class="p-2 w-100">@Model.Category.ParentCategory.Name</a>
+                   <a asp-action="Details" asp-route-id="@Model.Category.Id"style="color:black" class="p-2 w-100">@Model.Category.Name</a>
                 </div>
                 <div class="col-12 pt-2" style="font-size:5px; text-align:justify" >
                     <p>@Html.Raw(Model.ShortDesc)</p>

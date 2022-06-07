@@ -38,7 +38,7 @@
       </div>
       <div class="catalog">
 
-          @foreach (var catCards in Model.Categories.Where(c=>c.ParentCategory==null))
+          @foreach (var catCards in Model.Categories)
           {
             <partial name="_IndividualCategoryCard" model="catCards"/>
     }

@@ -1,7 +1,7 @@
 ﻿@using UpakUtilitiesLibrary
 @model UpakModelsLibrary.Models.ViewModels.CategoryVM
 
-<form method="post" action="Edit" enctype="multipart/form-data">
+<form method="post" asp-area="Admin" asp-controller="Category" asp-action="Edit" enctype="multipart/form-data">
 
     <input asp-for="Category.Id" hidden />
     <div class="border p-3">
@@ -29,27 +29,14 @@
         </div>
         <div class="form-group row">
             <div class="col-4">
-                image
+                
             </div>
             <div class="col-8">
                 <input type="file" name="files" id="uploadBox" multiple class="form-control" />
             </div>
         </div>
 
-        <div class="form-group row" id="ismaster">
-            <div class="col-4">
-                <label asp-for="Category.ParentCategory"></label>
-            </div>
-            <div class="col-8">
-                <select asp-for="Category.ParentCategoryId" class="form-select">
-                                @foreach (var item in Model.CategoriesForSelect)
-                                {
-                                    <option value="@item.Id">@item.Name</option>
-                                }
-                            <option value="" disabled="disabled" selected>Выберите родительскую категорию</option>
-                        </select>
-            </div>
-        </div>
+       
         <div class="form-group row">
             <div class="col-8 offset-4 row">
 

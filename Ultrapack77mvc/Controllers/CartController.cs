@@ -116,8 +116,9 @@ namespace Ultrapack77mvc.Controllers
 			};
 
 			await _context.AddAsync(orderHeader);
+			await _context.SaveChangesAsync();
 
-			foreach(var prod in ProductUserVM.ProductList)
+			foreach (var prod in ProductUserVM.ProductList)
 			{
 				OrderDetails orderDetails = new OrderDetails()
 				{

@@ -10,17 +10,14 @@
         </div>
         <div class="col-6">
             <a asp-area="Admin" asp-controller="Category" asp-action="Create" class="btn btn-primary">
-               Добавить
+                Добавить
             </a>
         </div>
     </div>
 
     @if (Model.Count() > 0)
     {
-
-        if ((Model.Where(c => c.ParentCategory == null)).Count() != 0)
-        {
-            <h6 style="margin-top:50px">Родительские категории</h6>
+            <h6 style="margin-top:50px">Категории</h6>
             <table class="table table-bordered table-striped" style="width:100%">
                 <thead>
                     <tr>
@@ -33,7 +30,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Where(c => c.ParentCategory == null))
+                    @foreach (var item in Model)
                     {
                         <tr>
                             <td width="30%">@item.Name</td>
@@ -52,48 +49,6 @@
                     }
                 </tbody>
             </table>
-            <h6 style="margin-top:50px">Дочерние категории</h6>
-        }
-        if ((Model.Where(c => c.ParentCategory != null)).Count() != 0)
-        {
-            <table class="table table-bordered table-striped" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>
-                            Название категории
-                        </th>
-                        <th>
-                            Описание категории
-                        </th>
-                        <th>
-                            Родительская категория
-                        </th>
-                        <th>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Where(c => c.ParentCategory != null))
-                    {
-                        <tr>
-                            <td width="30%">@item.Name</td>
-                            <td width="20%">@item.Description</td>
-                            <td width="20%">@item.ParentCategory.Name</td>
-                            <td class="text-center">
-                                <div class="w-75 btn-group" role="group">
-                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Edit" class="btn btn-primary">
-                                        Изменить категорию
-                                    </a>
-                                    <a asp-area="Admin" asp-controller="Category" asp-route-Id="@item.Id" asp-action="Delete" class="btn btn-danger">
-                                        Удалить категорию
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
     }
     else
     {

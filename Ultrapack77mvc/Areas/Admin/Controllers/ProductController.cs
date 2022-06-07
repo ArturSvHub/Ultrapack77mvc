@@ -7,40 +7,42 @@ using UpakUtilitiesLibrary;
 using UpakDataAccessLibrary.DataContext;
 using UpakModelsLibrary.Models;
 using UpakModelsLibrary.Models.ViewModels;
-using UpakDataAccessLibrary.Repository.IRepository;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
 	[Authorize(Roles = WebConstants.AdminRole)]
+	[Area("Admin")]
 	public class ProductController : Controller
 	{
-		private readonly IProductRepository _prodContext;
+		private readonly MssqlContext _context;
 		private readonly IWebHostEnvironment _environment;
 
-		public ProductController(IProductRepository context, IWebHostEnvironment environment)
+		public ProductController(MssqlContext context, IWebHostEnvironment environment)
 		{
-			_prodContext = context;
+			_context = context;
 			_environment = environment;
 		}
 
-		[Area("Admin")]
 		[HttpGet]
 		public IActionResult Index()
 		{
-			IEnumerable<Product> prodList = _prodContext
-				.GetAll(includeProperties:"Category");
+			IEnumerable<Product> prodList = _context.Products.Include(u=>u.Category);
 
 			return View(prodList);
 		}
 		//GET - upsert
-		[Area("Admin")]
 		[HttpGet]
 		public async Task<IActionResult> Upsert(int? id)
 		{
 			ProductVM productVM = new ProductVM()
 			{
 				Product = new Product(),
-				CategorySelectedList = _prodContext.GetDropdownList()
+				CategorySelectedList = _context.Categories
+				.Select(i => new SelectListItem
+				{
+					Text = i.Name,
+					Value = i.Id.ToString()
+				})
 			};
 			if (id is null)
 			{
@@ -48,7 +50,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			}
 			else
 			{
-				productVM.Product =await _prodContext.FindAsync(id.GetValueOrDefault());
+				productVM.Product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 				if (productVM.Product is null)
 				{
 					return NotFound();
@@ -59,7 +61,6 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 
 		//POST - upsert
-		[Area("Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Upsert(ProductVM productVM)
@@ -85,12 +86,11 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 					productVM.Product.Image = fileName + extention;
 
-					await _prodContext.AddAsync(productVM.Product);
+					await _context.AddAsync(productVM.Product);
 				}
 				else
 				{
-					var objFromDb = _prodContext.FirstOrDefault(x =>
-					x.Id == productVM.Product.Id,isTracking:false);
+				var objFromDb =await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == productVM.Product.Id);
 					if (files.Count > 0)
 					{
 						string upload = webRootPath + WebConstants.ProductImagePath;
@@ -115,9 +115,9 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 					{
 						productVM.Product.Image = objFromDb.Image;
 					}
-					_prodContext.Update(productVM.Product);
+					_context.Update(productVM.Product);
 				}
-				await _prodContext.SaveAsync();
+				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			//}
 			//else
@@ -136,7 +136,6 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 
 
-		[Area("Admin")]
 		[HttpGet]
 		public IActionResult Delete(int? id)
 		{
@@ -144,7 +143,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
-			Product? product = _prodContext.FirstOrDefault(u=>u.Id==id,includeProperties: "Category");
+			Product? product = _context.Products.Include(c=>c.Category).FirstOrDefault(u=>u.Id==id);
 			if(product==null)
 			{
 				return NotFound();
@@ -153,13 +152,12 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 		}
 		//POST - delete
-		[Area("Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeletePost(int? id)
 		{
 			
-			var obj =await _prodContext.FindAsync(id.GetValueOrDefault());
+			var obj =await _context.Products.FindAsync(id);
 			if (obj==null)
 			{
 				return NotFound();
@@ -173,8 +171,8 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			}
 
 
-			_prodContext.Remove(obj);
-			await _prodContext.SaveAsync();
+			_context.Remove(obj);
+			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
 		}
 	}
