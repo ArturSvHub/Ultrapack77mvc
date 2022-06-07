@@ -18,8 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using UpakUtilitiesLibrary;
-using UpakModelsLibrary.Models;
+using Ultrapack77mvc;
+using Ultrapack77mvc.Models;
 
 namespace Ultrapack77mvc.Areas.Identity.Pages.Account
 {

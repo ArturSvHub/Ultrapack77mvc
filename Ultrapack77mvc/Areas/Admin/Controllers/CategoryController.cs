@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UpakDataAccessLibrary.DataContext;
-using UpakModelsLibrary.Models;
-using UpakModelsLibrary.Models.ViewModels;
+using Ultrapack77mvc.DataContext;
+using Ultrapack77mvc.Models;
+using Ultrapack77mvc.Models.ViewModels;
 
-using UpakUtilitiesLibrary;
+using Ultrapack77mvc;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {

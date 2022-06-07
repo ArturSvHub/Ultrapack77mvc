@@ -15,6 +15,10 @@
 
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="3.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -112,12 +116,6 @@
     <None Include="wwwroot\js\vendors\knob\jquery.knob.min.js" />
     <None Include="wwwroot\js\vendors\nioapp\nioapp.min.js" />
     <None Include="wwwroot\js\vendors\prettify.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\UpakDataAccessLibrary\UpakDataAccessLibrary.csproj" />
-    <ProjectReference Include="..\UpakModelsLibrary\UpakModelsLibrary.csproj" />
-    <ProjectReference Include="..\UpakUtilitiesLibrary\UpakUtilitiesLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>

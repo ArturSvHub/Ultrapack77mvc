@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text;
 
-using UpakDataAccessLibrary.DataContext;
-using UpakUtilitiesLibrary;
-using UpakModelsLibrary.Models;
-using UpakUtilitiesLibrary.Utility.Extentions;
-using UpakModelsLibrary.Models.ViewModels;
+using Ultrapack77mvc.DataContext;
+using Ultrapack77mvc;
+using Ultrapack77mvc.Models;
+using Ultrapack77mvc.Utility.Extentions;
+using Ultrapack77mvc.Models.ViewModels;
 
 namespace Ultrapack77mvc.Controllers
 {

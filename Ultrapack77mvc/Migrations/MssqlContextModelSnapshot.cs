@@ -274,7 +274,7 @@ namespace Ultrapack77mvc.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Ultrapack77mvc.Models.Category", b =>
@@ -297,7 +297,7 @@ namespace Ultrapack77mvc.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Ultrapack77mvc.Models.OrderDetails", b =>
@@ -320,7 +320,7 @@ namespace Ultrapack77mvc.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("Ultrapack77mvc.Models.OrderHeader", b =>
@@ -352,7 +352,7 @@ namespace Ultrapack77mvc.Migrations
 
                     b.HasIndex("UltrapackUserId");
 
-                    b.ToTable("OrderHeaders");
+                    b.ToTable("OrderHeaders", (string)null);
                 });
 
             modelBuilder.Entity("Ultrapack77mvc.Models.Product", b =>
@@ -398,7 +398,7 @@ namespace Ultrapack77mvc.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Ultrapack77mvc.Models.UltrapackUser", b =>

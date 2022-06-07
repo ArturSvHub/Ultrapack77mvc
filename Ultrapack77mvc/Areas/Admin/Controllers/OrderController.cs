@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UpakDataAccessLibrary.DataContext;
-using UpakUtilitiesLibrary;
+using Ultrapack77mvc.DataContext;
+using Ultrapack77mvc;
 
 namespace Ultrapack77mvc.Controllers
 {

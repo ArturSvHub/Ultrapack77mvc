@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UpakUtilitiesLibrary;
+using Ultrapack77mvc;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {

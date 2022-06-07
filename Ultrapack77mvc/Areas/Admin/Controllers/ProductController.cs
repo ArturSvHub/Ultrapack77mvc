@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using UpakUtilitiesLibrary;
-using UpakDataAccessLibrary.DataContext;
-using UpakModelsLibrary.Models;
-using UpakModelsLibrary.Models.ViewModels;
+using Ultrapack77mvc;
+using Ultrapack77mvc.DataContext;
+using Ultrapack77mvc.Models;
+using Ultrapack77mvc.Models.ViewModels;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
 {
