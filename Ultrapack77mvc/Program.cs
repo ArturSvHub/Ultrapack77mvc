@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using UpakDataAccessLibrary.DataContext;
-
 using UpakUtilitiesLibrary.Utility.EmailServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +41,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
-
+app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

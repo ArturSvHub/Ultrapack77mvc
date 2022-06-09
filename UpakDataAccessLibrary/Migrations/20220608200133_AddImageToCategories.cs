@@ -1,24 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace UpakDataAccessLibrary.Migrations
 {
-    public partial class MasterCategoryId : Migration
+    public partial class AddImageToCategories : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "MasterCategoryId",
+            migrationBuilder.AddColumn<byte[]>(
+                name: "Image",
                 table: "Categories",
-                type: "int",
+                type: "varbinary(max)",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "MasterCategoryId",
+                name: "Image",
                 table: "Categories");
         }
     }

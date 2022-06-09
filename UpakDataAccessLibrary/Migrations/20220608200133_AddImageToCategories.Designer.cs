@@ -12,8 +12,8 @@ using UpakDataAccessLibrary.DataContext;
 namespace UpakDataAccessLibrary.Migrations
 {
     [DbContext(typeof(MssqlContext))]
-    [Migration("20220606151726_DeleteCustomerTable")]
-    partial class DeleteCustomerTable
+    [Migration("20220608200133_AddImageToCategories")]
+    partial class AddImageToCategories
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -290,6 +290,9 @@ namespace UpakDataAccessLibrary.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -297,12 +300,7 @@ namespace UpakDataAccessLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
                 });
@@ -385,18 +383,21 @@ namespace UpakDataAccessLibrary.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("PurchasePrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("PurchasePrice")
+                        .HasColumnType("float");
 
-                    b.Property<decimal?>("RetailPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("RetailPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("ShortDesc")
                         .HasColumnType("nvarchar(max)");
@@ -470,15 +471,6 @@ namespace UpakDataAccessLibrary.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("UpakModelsLibrary.Models.Category", b =>
-                {
-                    b.HasOne("UpakModelsLibrary.Models.Category", "ParentCategory")
-                        .WithMany("ChildrenCategories")
-                        .HasForeignKey("ParentCategoryId");
-
-                    b.Navigation("ParentCategory");
-                });
-
             modelBuilder.Entity("UpakModelsLibrary.Models.OrderDetails", b =>
                 {
                     b.HasOne("UpakModelsLibrary.Models.OrderHeader", "OrderHeader")
@@ -522,8 +514,6 @@ namespace UpakDataAccessLibrary.Migrations
 
             modelBuilder.Entity("UpakModelsLibrary.Models.Category", b =>
                 {
-                    b.Navigation("ChildrenCategories");
-
                     b.Navigation("Products");
                 });
 #pragma warning restore 612, 618

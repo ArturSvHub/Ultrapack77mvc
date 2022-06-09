@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-
 using System.Security.Claims;
 using System.Text;
-
 using UpakDataAccessLibrary.DataContext;
 using UpakUtilitiesLibrary;
 using UpakModelsLibrary.Models;
@@ -29,7 +27,7 @@ namespace Ultrapack77mvc.Controllers
 			_emailSender=emailSender;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
 			List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 			if(HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart)!=null&&
@@ -45,16 +43,15 @@ namespace Ultrapack77mvc.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[ActionName("Index")]
-		public IActionResult IndexPost()
+		public async Task<IActionResult> IndexPost()
 		{
 			return RedirectToAction(nameof(Summary));
 		}
 
-        public IActionResult Summary()
+		public async Task<IActionResult> Summary()
         {
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			//var userId = User.FindFirstValue(ClaimTypes.Name);
 
 			List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 			if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null &&
@@ -137,7 +134,7 @@ namespace Ultrapack77mvc.Controllers
 			HttpContext.Session.Clear();
 			return View();
 		}
-		public IActionResult Remove(int id)
+		public async Task<IActionResult> Remove(int id)
 		{
 			List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 			if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null &&

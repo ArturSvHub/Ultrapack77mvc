@@ -288,6 +288,9 @@ namespace UpakDataAccessLibrary.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -378,18 +381,21 @@ namespace UpakDataAccessLibrary.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("PurchasePrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("PurchasePrice")
+                        .HasColumnType("float");
 
-                    b.Property<decimal?>("RetailPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("RetailPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("ShortDesc")
                         .HasColumnType("nvarchar(max)");

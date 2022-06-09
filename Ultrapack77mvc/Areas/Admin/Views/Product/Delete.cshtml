@@ -1,7 +1,8 @@
 ﻿@using UpakUtilitiesLibrary
+@using UpakUtilitiesLibrary.Utility.Extentions
 @model UpakModelsLibrary.Models.Product
 
-<form method="post" asp-action="DeletePost" enctype="multipart/form-data">
+<form method="post" asp-action="Delete" enctype="multipart/form-data">
 
     <input asp-for="Id" hidden />
 
@@ -77,7 +78,7 @@
                 @* Keep this empty *@
                 @if (Model.Id != 0)
                 {
-                    <img src="@WebConstants.ProductImagePath@Model.Image"
+                    <img src="@Model.Image.DataArrayToImageUrl()"
                      width="100%" style="border-radius:5px;border:1px solid #bbb" />
                 }
             </div>

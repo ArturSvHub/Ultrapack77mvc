@@ -63,20 +63,10 @@ namespace Ultrapack77mvc.Controllers
 				Products = _context.Products.Include(u => u.Category),
 				Categories = _context.Categories
 			};
+			ViewBag.CurrentId = id;
 			return View(homeVM);
 		}
-		public IActionResult DetailsChild(int id)
-		{
-
-			HomeVM homeVM = new HomeVM()
-			{
-				Products = _context.Products.Include(u => u.Category),
-				Categories = _context.Categories
-			};
-			ViewBag.ThisId = homeVM.Categories.FirstOrDefault(c => c.Id == id).Id;
-			return View(homeVM);
-		}
-		public IActionResult Product(int id)
+		public async Task<IActionResult> Product(int id)
 		{
 			List<ShoppingCart> shoppingCartsList = new();
 			if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null &&
@@ -87,8 +77,8 @@ namespace Ultrapack77mvc.Controllers
 
 			ProductCardVM productCardVM = new()
 			{
-				Product = _context.Products.Include(u => u.Category)
-				.FirstOrDefault(c => c.Id == id),
+				Product =await _context.Products.Include(u => u.Category)
+				.FirstOrDefaultAsync(c => c.Id == id),
 				ExistsInCart = false
 			};
 
@@ -100,6 +90,7 @@ namespace Ultrapack77mvc.Controllers
 				}
 			}
 			return View(productCardVM);
+
 		}
 		[HttpPost,ActionName("Product")]
 		public IActionResult ProductPost(int id)
@@ -114,6 +105,8 @@ namespace Ultrapack77mvc.Controllers
 			HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartsList);
 			return RedirectToAction(nameof(Product));
 		}
+
+
 		public IActionResult RemoveFromCart(int id)
 		{
 			List<ShoppingCart> shoppingCartsList = new();

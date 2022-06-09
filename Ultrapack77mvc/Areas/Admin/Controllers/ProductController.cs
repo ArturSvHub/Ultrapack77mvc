@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UpakUtilitiesLibrary;
+using UpakUtilitiesLibrary.Utility.Extentions;
 using UpakDataAccessLibrary.DataContext;
 using UpakModelsLibrary.Models;
 using UpakModelsLibrary.Models.ViewModels;
@@ -26,13 +27,13 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[HttpGet]
 		public IActionResult Index()
 		{
-			IEnumerable<Product> prodList = _context.Products.Include(u=>u.Category);
+			IEnumerable<Product> prodList = _context.Products.Include(u => u.Category);
 
 			return View(prodList);
 		}
 		//GET - upsert
 		[HttpGet]
-		public async Task<IActionResult> Upsert(int? id)
+		public IActionResult Upsert(int? id)
 		{
 			ProductVM productVM = new ProductVM()
 			{
@@ -44,13 +45,13 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 					Value = i.Id.ToString()
 				})
 			};
-			if (id is null)
+			if (id == null)
 			{
 				return View(productVM);
 			}
 			else
 			{
-				productVM.Product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+				productVM.Product = _context.Products.Find(id);
 				if (productVM.Product is null)
 				{
 					return NotFound();
@@ -65,112 +66,66 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Upsert(ProductVM productVM)
 		{
-			//if (ModelState.IsValid)
-			//{
-				productVM.Product.CreatedDateTime = DateTime.Now;
-				var files = HttpContext.Request.Form.Files;
-				string webRootPath = _environment.WebRootPath;
+			var files = HttpContext.Request.Form.Files;
 
-				if (productVM.Product.Id == 0)
+			if (productVM.Product.Id == 0)
+			{
+				productVM.Product.ImagePath = files[0].FileName;
+				productVM.Product.Image = await files[0].ImageToImageDataAsync();
+
+				await _context.AddAsync(productVM.Product);
+			}
+			else
+			{
+				if (files[0] != null)
 				{
-					string upload = webRootPath + WebConstants.ProductImagePath;
-					string fileName = Guid.NewGuid().ToString();
-					string extention = Path.GetExtension(files[0].FileName);
-
-					using (var fileStream = new FileStream(
-						Path.Combine(upload, fileName + extention),
-						FileMode.Create))
-					{
-						files[0].CopyTo(fileStream);
-					};
-
-					productVM.Product.Image = fileName + extention;
-
-					await _context.AddAsync(productVM.Product);
+					productVM.Product.Image = await files[0].ImageToImageDataAsync();
+					productVM.Product.ImagePath = files[0].FileName;
 				}
 				else
 				{
-				var objFromDb =await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == productVM.Product.Id);
-					if (files.Count > 0)
-					{
-						string upload = webRootPath + WebConstants.ProductImagePath;
-						string fileName = Guid.NewGuid().ToString();
-						string extention = Path.GetExtension(files[0].FileName);
-
-						var oldFile = Path.Combine(upload, objFromDb.Image);
-						if (System.IO.File.Exists(oldFile))
-						{
-							System.IO.File.Delete(oldFile);
-						}
-
-						using (var fileStream = new FileStream(
-						Path.Combine(upload, fileName + extention),
-						FileMode.Create))
-						{
-							files[0].CopyTo(fileStream);
-						};
-						productVM.Product.Image = fileName + extention;
-					}
-					else
-					{
-						productVM.Product.Image = objFromDb.Image;
-					}
-					_context.Update(productVM.Product);
+					var objFromDb = await _context.Products?.AsNoTracking().FirstOrDefaultAsync(p => p.Id == productVM.Product.Id);
+					productVM.Product.Image = objFromDb?.Image;
+					productVM.Product.ImagePath = objFromDb.ImagePath;
 				}
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
-			//}
-			//else
-			//{
-			//	productVM.CategorySelectedList = _context.Categories
-			//		.Where(c => c.IsMasterCategory == false)
-			//		.Select(i => new SelectListItem
-			//		{
-			//			Text = i.Name,
-			//			Value = i.Id.ToString()
-			//		});
-			//	return View(productVM);
-			//}
+				_context.Update(productVM.Product);
+			}
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction(nameof(Index));
 		}
 
 
 
 
 		[HttpGet]
-		public IActionResult Delete(int? id)
+		public async Task<IActionResult> Delete(int? id)
 		{
-			if (id == null||id==0)
+			if (id == null || id == 0)
 			{
 				return NotFound();
 			}
-			Product? product = _context.Products.Include(c=>c.Category).FirstOrDefault(u=>u.Id==id);
-			if(product==null)
+			Product? product = await _context.Products?.Include(c => c.Category).FirstOrDefaultAsync(u => u.Id == id);
+			if (product == null)
 			{
 				return NotFound();
 			}
 			return View(product);
 
 		}
+
+
 		//POST - delete
-		[HttpPost]
+		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeletePost(int? id)
 		{
-			
-			var obj =await _context.Products.FindAsync(id);
-			if (obj==null)
+
+			var obj = await _context.Products.FindAsync(id);
+			if (obj == null)
 			{
 				return NotFound();
 			}
-			string upload = _environment.WebRootPath + WebConstants.ProductImagePath;
-
-			var oldFile = Path.Combine(upload, obj.Image);
-			if (System.IO.File.Exists(oldFile))
-			{
-				System.IO.File.Delete(oldFile);
-			}
-
-
 			_context.Remove(obj);
 			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));

@@ -4,7 +4,7 @@
 }
 
       <div class="catalog">
-          @foreach (var prodCards in Model.Products)
+    @foreach (var prodCards in Model.Products.Where(p=>p.CategoryId == ViewBag.CurrentId))
           {
               <partial name="_IndividualProductCard" model="prodCards"/>
           }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using UpakDataAccessLibrary.DataContext;
 using UpakModelsLibrary.Models;
 using UpakModelsLibrary.Models.ViewModels;
-
+using UpakUtilitiesLibrary.Utility.Extentions;
 using UpakUtilitiesLibrary;
 
 namespace Ultrapack77mvc.Areas.Admin.Controllers
@@ -27,48 +27,29 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 
 		
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			IEnumerable<Category> catList = _context.Categories;
+			List<Category> catList =await _context.Categories.ToListAsync();
 			return View(catList);
 		}
 		//GET - Create
 		
-		public IActionResult Create()
+		public async Task<IActionResult> Create()
 		{
-			CategoryVM categoryVM = new()
-			{
-				Category = new Category(),
-				CategoriesForSelect = _context.Categories.ToList()
-			};
-			return View(categoryVM);
+			return View();
 		}
 		//POST-Create
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(CategoryVM categoryVM)
+		public async Task<IActionResult> Create(Category category)
 		{
-			//if (ModelState.IsValid)
-			//{
-			var files = HttpContext.Request.Form.Files;
-			string webRootPath = _environment.WebRootPath;
+			var file = HttpContext.Request.Form.Files[0];
 
-			string upload = webRootPath + WebConstants.CategoryImagePath;
-			string fileName = Guid.NewGuid().ToString();
-			string extention = Path.GetExtension(files[0].FileName);
-
-			using (var fileStream = new FileStream(
-				Path.Combine(upload, fileName + extention),
-				FileMode.Create))
-			{
-				files[0].CopyTo(fileStream);
-			}
-
-			categoryVM.Category.ImagePath = fileName + extention;
-
-			_context.Add(categoryVM.Category);
-			_context.SaveChanges();
+			category.ImagePath = file.FileName;
+			category.Image = await file.ImageToImageDataAsync();
+			await _context.Categories.AddAsync(category);
+			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
 			
 		}
@@ -76,25 +57,20 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		//GET-EDIT
 
 		[HttpGet]
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int? id)
 		{
-			CategoryVM categoryVM = new CategoryVM()
+			if (id==null|| id == 0)
 			{
-				Category = new Category(),
-				CategoriesForSelect =_context.Categories.ToList()
-			};
-			if (id == 0)
-			{
-				return View(categoryVM);
+				return NotFound();
 			}
 			else
 			{
-				categoryVM.Category =_context.Categories.FirstOrDefault(x=>x.Id==id);
-				if (categoryVM.Category is null)
+				var obj =await _context.Categories.FindAsync(id);
+				if (obj == null)
 				{
 					return NotFound();
 				}
-				return View(categoryVM);
+				return View(obj);
 			}
 		}
 
@@ -102,39 +78,24 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(CategoryVM categoryVM)
+		public async Task<IActionResult> Edit(Category category)
 		{
 			var files = HttpContext.Request.Form.Files;
-			string webRootPath = _environment.WebRootPath;
-
-			var objFromDb = _context.Categories.AsNoTracking().FirstOrDefault(x =>
-			x.Id == categoryVM.Category.Id);
+			
 			if (files.Count > 0)
 			{
-				string upload = webRootPath + WebConstants.CategoryImagePath;
-				string fileName = Guid.NewGuid().ToString();
-				string extention = Path.GetExtension(files[0].FileName);
-
-				var oldFile = Path.Combine(upload, objFromDb.ImagePath);
-				if (System.IO.File.Exists(oldFile))
-				{
-					System.IO.File.Delete(oldFile);
-				}
-
-				using (var fileStream = new FileStream(
-				Path.Combine(upload, fileName + extention),
-				FileMode.Create))
-				{
-					files[0].CopyTo(fileStream);
-				};
-				categoryVM.Category.ImagePath = fileName + extention;
+				category.ImagePath = files[0].FileName;
+				category.Image = await files[0].ImageToImageDataAsync();
 			}
 			else
 			{
-				categoryVM.Category.ImagePath = objFromDb.ImagePath;
+				var objFromDb = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(x =>
+			x.Id == category.Id);
+				category.Image = objFromDb.Image;
+				category.ImagePath = objFromDb.ImagePath;
 			}
-			_context.Update(categoryVM.Category);
-			_context.SaveChanges();
+			_context.Categories.Update(category);
+			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -150,7 +111,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			{
 				return NotFound();
 			}
-			Category? category =await _context.Categories.FindAsync(id.GetValueOrDefault());
+			Category? category =await _context.Categories.FindAsync(id);
 			if (category == null)
 			{
 				return NotFound();
@@ -160,25 +121,16 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		}
 		//POST - delete
 
-		[HttpPost]
+		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeletePost(int? id)
 		{
 
-			var obj =await _context.Categories.FindAsync(id.GetValueOrDefault());
+			var obj =await _context.Categories.FindAsync(id);
 			if (obj == null)
 			{
 				return NotFound();
 			}
-			string upload = _environment.WebRootPath + WebConstants.CategoryImagePath;
-
-			var oldFile = Path.Combine(upload, obj.ImagePath);
-			if (System.IO.File.Exists(oldFile))
-			{
-				System.IO.File.Delete(oldFile);
-			}
-
-
 			_context.Remove(obj);
 			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));

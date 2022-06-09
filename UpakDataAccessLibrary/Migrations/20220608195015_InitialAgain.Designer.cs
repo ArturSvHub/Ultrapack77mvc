@@ -12,8 +12,8 @@ using UpakDataAccessLibrary.DataContext;
 namespace UpakDataAccessLibrary.Migrations
 {
     [DbContext(typeof(MssqlContext))]
-    [Migration("20220606151246_AddOrderTables")]
-    partial class AddOrderTables
+    [Migration("20220608195015_InitialAgain")]
+    partial class InitialAgain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -253,9 +253,6 @@ namespace UpakDataAccessLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("HouseNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -279,8 +276,6 @@ namespace UpakDataAccessLibrary.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.ToTable("Addresses");
                 });
 
@@ -302,71 +297,9 @@ namespace UpakDataAccessLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhotoPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PurchaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("UpakModelsLibrary.Models.OrderDetails", b =>
@@ -447,21 +380,21 @@ namespace UpakDataAccessLibrary.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<double?>("PurchasePrice")
+                        .HasColumnType("float");
 
-                    b.Property<decimal?>("PurchasePrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("RetailPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double?>("RetailPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("ShortDesc")
                         .HasColumnType("nvarchar(max)");
@@ -470,35 +403,7 @@ namespace UpakDataAccessLibrary.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("OrderId");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.ProductOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductOrders");
                 });
 
             modelBuilder.Entity("UpakModelsLibrary.Models.UltrapackUser", b =>
@@ -563,37 +468,6 @@ namespace UpakDataAccessLibrary.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("UpakModelsLibrary.Models.Address", b =>
-                {
-                    b.HasOne("UpakModelsLibrary.Models.Customer", "Customer")
-                        .WithMany("Addresses")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.Category", b =>
-                {
-                    b.HasOne("UpakModelsLibrary.Models.Category", "ParentCategory")
-                        .WithMany("ChildrenCategories")
-                        .HasForeignKey("ParentCategoryId");
-
-                    b.Navigation("ParentCategory");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.Order", b =>
-                {
-                    b.HasOne("UpakModelsLibrary.Models.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
             modelBuilder.Entity("UpakModelsLibrary.Models.OrderDetails", b =>
                 {
                     b.HasOne("UpakModelsLibrary.Models.OrderHeader", "OrderHeader")
@@ -632,50 +506,11 @@ namespace UpakDataAccessLibrary.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UpakModelsLibrary.Models.Order", null)
-                        .WithMany("Products")
-                        .HasForeignKey("OrderId");
-
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.ProductOrder", b =>
-                {
-                    b.HasOne("UpakModelsLibrary.Models.Order", "Order")
-                        .WithMany("ProductOrders")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UpakModelsLibrary.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("UpakModelsLibrary.Models.Category", b =>
                 {
-                    b.Navigation("ChildrenCategories");
-
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.Customer", b =>
-                {
-                    b.Navigation("Addresses");
-
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("UpakModelsLibrary.Models.Order", b =>
-                {
-                    b.Navigation("ProductOrders");
-
                     b.Navigation("Products");
                 });
 #pragma warning restore 612, 618

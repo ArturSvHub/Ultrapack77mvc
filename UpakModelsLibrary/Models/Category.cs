@@ -11,7 +11,8 @@ namespace UpakModelsLibrary.Models
 		public string? Description { get; set; }
 		[Required]
 		[DisplayName("Название категории")]
-		public string Name { get; set; }
+		public string? Name { get; set; }
+		public byte[]? Image { get; set; }
 		public string? ImagePath { get; set; }
 		public List<Product>? Products { get; set; }
 	}

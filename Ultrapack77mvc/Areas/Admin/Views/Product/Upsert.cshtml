@@ -1,4 +1,4 @@
-﻿@using UpakUtilitiesLibrary
+﻿@using UpakUtilitiesLibrary.Utility.Extentions;
 @model UpakModelsLibrary.Models.ViewModels.ProductVM
 @{
     var title = "Добавить товар";
@@ -99,7 +99,7 @@
                 @* Keep this empty *@
                 @if (Model.Product.Id != 0)
                 {
-                    <img src="@WebConstants.ProductImagePath@Model.Product.Image"
+                    <img src="@Model.Product.Image.DataArrayToImageUrl()"
                      width="100%" style="border-radius:5px;border:1px solid #bbb" />
                 }
             </div>
