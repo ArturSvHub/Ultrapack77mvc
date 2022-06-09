@@ -8,7 +8,7 @@ namespace UpakModelsLibrary.Models.ViewModels
 		{
 			ProductList = new List<Product>();
 		}
-		public IList<Product> ProductList { get; set; }
-        public UltrapackUser ApplicationUser { get; set; }
+		public IList<Product>? ProductList { get; set; }
+        public UltrapackUser? ApplicationUser { get; set; }
     }
 }

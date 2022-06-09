@@ -12,9 +12,11 @@ namespace UpakModelsLibrary.Models
 	{
 		[Key]
 		public int Id { get; set; }
-		public string UltrapackUserId { get; set; }
+		[Required]
+		public string? UltrapackUserId { get; set; }
+		[Required]
 		[ForeignKey("UltrapackUserId")]
-		public UltrapackUser UltrapackUser { get; set; }
+		public UltrapackUser? UltrapackUser { get; set; }
 		public DateTime? OrderDate { get; set; }
 		public string? PhoneNumber { get; set; }
 		public string? FullName { get; set; }

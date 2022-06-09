@@ -14,9 +14,9 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 	public class CategoryController : Controller
 	{
 		
-		private readonly MssqlContext _context;
+		private readonly MssqlContext? _context;
 
-		private readonly IWebHostEnvironment _environment;
+		private readonly IWebHostEnvironment? _environment;
 
 		public CategoryController(MssqlContext catContext, IWebHostEnvironment environment)
 		{
@@ -29,12 +29,12 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		
 		public async Task<IActionResult> Index()
 		{
-			List<Category> catList =await _context.Categories.ToListAsync();
+			List<Category> catList =await _context.Categories?.ToListAsync();
 			return View(catList);
 		}
 		//GET - Create
 		
-		public async Task<IActionResult> Create()
+		public IActionResult Create()
 		{
 			return View();
 		}
@@ -44,10 +44,10 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(Category category)
 		{
-			var file = HttpContext.Request.Form.Files[0];
+			var files = HttpContext.Request.Form.Files;
 
-			category.ImagePath = file.FileName;
-			category.Image = await file.ImageToImageDataAsync();
+			
+			category.Image = await files[0].ImageToImageDataAsync();
 			await _context.Categories.AddAsync(category);
 			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
@@ -84,15 +84,13 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			
 			if (files.Count > 0)
 			{
-				category.ImagePath = files[0].FileName;
 				category.Image = await files[0].ImageToImageDataAsync();
 			}
 			else
 			{
-				var objFromDb = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(x =>
+				var objFromDb = await _context.Categories?.AsNoTracking().FirstOrDefaultAsync(x =>
 			x.Id == category.Id);
 				category.Image = objFromDb.Image;
-				category.ImagePath = objFromDb.ImagePath;
 			}
 			_context.Categories.Update(category);
 			await _context.SaveChangesAsync();

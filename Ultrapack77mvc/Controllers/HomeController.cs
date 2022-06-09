@@ -25,7 +25,7 @@ namespace Ultrapack77mvc.Controllers
 		{
 			HomeVM homeVM = new HomeVM()
 			{
-				Products = _context.Products.Include(u => u.Category),
+				Products = _context.Products?.Include(u => u.Category),
 				Categories = _context.Categories
 			};
 			return View(homeVM);
@@ -41,6 +41,12 @@ namespace Ultrapack77mvc.Controllers
 		}
 		public IActionResult Contacts()
 		{
+
+			return View();
+		}
+		public IActionResult ContactsPost()
+		{
+
 			return View();
 		}
 		public IActionResult Providers()
@@ -60,13 +66,13 @@ namespace Ultrapack77mvc.Controllers
 
 			HomeVM homeVM = new HomeVM()
 			{
-				Products = _context.Products.Include(u => u.Category),
+				Products = _context.Products?.Include(u => u.Category),
 				Categories = _context.Categories
 			};
 			ViewBag.CurrentId = id;
 			return View(homeVM);
 		}
-		public async Task<IActionResult> Product(int id)
+		public IActionResult Product(int id)
 		{
 			List<ShoppingCart> shoppingCartsList = new();
 			if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null &&
@@ -77,8 +83,8 @@ namespace Ultrapack77mvc.Controllers
 
 			ProductCardVM productCardVM = new()
 			{
-				Product =await _context.Products.Include(u => u.Category)
-				.FirstOrDefaultAsync(c => c.Id == id),
+				Product = _context.Products?.Include(u => u.Category)
+				.FirstOrDefault(c => c.Id == id),
 				ExistsInCart = false
 			};
 

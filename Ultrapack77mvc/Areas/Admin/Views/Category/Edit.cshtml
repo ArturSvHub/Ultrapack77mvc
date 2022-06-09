@@ -53,8 +53,8 @@
         <div class="col-4">
             @if (Model.Id != 0)
             {
-                <img src="@Model.Image.DataArrayToImageUrl()"
-                 width="100%" style="border-radius:5px;border:1px solid #bbb" />
+                <img src="@Model.@Model.Image.DataArrayToImageUrl()"
+                 style="border-radius:5px;border:1px solid #bbb;width:100%" />
             }
         </div>
     </div>

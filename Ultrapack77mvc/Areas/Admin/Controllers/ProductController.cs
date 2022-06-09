@@ -27,7 +27,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 		[HttpGet]
 		public IActionResult Index()
 		{
-			IEnumerable<Product> prodList = _context.Products.Include(u => u.Category);
+			IEnumerable<Product>? prodList = _context.Products?.Include(u => u.Category);
 
 			return View(prodList);
 		}
@@ -38,7 +38,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			ProductVM productVM = new ProductVM()
 			{
 				Product = new Product(),
-				CategorySelectedList = _context.Categories
+				CategorySelectedList = _context.Categories?
 				.Select(i => new SelectListItem
 				{
 					Text = i.Name,
@@ -51,7 +51,7 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 			}
 			else
 			{
-				productVM.Product = _context.Products.Find(id);
+				productVM.Product = _context.Products?.Find(id);
 				if (productVM.Product is null)
 				{
 					return NotFound();
@@ -70,7 +70,6 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 
 			if (productVM.Product.Id == 0)
 			{
-				productVM.Product.ImagePath = files[0].FileName;
 				productVM.Product.Image = await files[0].ImageToImageDataAsync();
 
 				await _context.AddAsync(productVM.Product);
@@ -80,13 +79,11 @@ namespace Ultrapack77mvc.Areas.Admin.Controllers
 				if (files[0] != null)
 				{
 					productVM.Product.Image = await files[0].ImageToImageDataAsync();
-					productVM.Product.ImagePath = files[0].FileName;
 				}
 				else
 				{
 					var objFromDb = await _context.Products?.AsNoTracking().FirstOrDefaultAsync(p => p.Id == productVM.Product.Id);
 					productVM.Product.Image = objFromDb?.Image;
-					productVM.Product.ImagePath = objFromDb.ImagePath;
 				}
 				_context.Update(productVM.Product);
 			}

@@ -99,8 +99,8 @@
                 @* Keep this empty *@
                 @if (Model.Product.Id != 0)
                 {
-                    <img src="@Model.Product.Image.DataArrayToImageUrl()"
-                     width="100%" style="border-radius:5px;border:1px solid #bbb" />
+                    <img src="@Model.Product.Image?.DataArrayToImageUrl()"
+                     style="border-radius:5px;border:1px solid #bbb;width:100%" />
                 }
             </div>
         </div>

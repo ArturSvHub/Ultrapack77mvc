@@ -8,17 +8,18 @@ using UpakUtilitiesLibrary;
 using UpakModelsLibrary.Models;
 using UpakUtilitiesLibrary.Utility.Extentions;
 using UpakModelsLibrary.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ultrapack77mvc.Controllers
 {
 	[Authorize]
 	public class CartController : Controller
 	{
-		private readonly MssqlContext _context;
-		private readonly IWebHostEnvironment _environment;
-		private readonly IEmailSender _emailSender;
+		private readonly MssqlContext? _context;
+		private readonly IWebHostEnvironment? _environment;
+		private readonly IEmailSender? _emailSender;
 		[BindProperty]
-		public ProductUserVM ProductUserVM { get; set; }
+		public ProductUserVM? ProductUserVM { get; set; }
 
 		public CartController(MssqlContext context,IWebHostEnvironment environment,IEmailSender emailSender)
 		{
@@ -36,21 +37,21 @@ namespace Ultrapack77mvc.Controllers
 				shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
 			}
 			List<int> prodInCart = shoppingCartList.Select(i=>i.ProductId).ToList();
-			List<Product> prodList = _context.Products.Where(u => prodInCart.Contains(u.Id)).ToList();
+			List<Product> prodList =await _context.Products?.Where(u => prodInCart.Contains(u.Id)).ToListAsync();
 
 			return View(prodList);
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[ActionName("Index")]
-		public async Task<IActionResult> IndexPost()
+		public IActionResult IndexPost()
 		{
 			return RedirectToAction(nameof(Summary));
 		}
 
 		public async Task<IActionResult> Summary()
         {
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claimsIdentity = User.Identity as ClaimsIdentity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
 			List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
@@ -60,11 +61,11 @@ namespace Ultrapack77mvc.Controllers
 				shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
 			}
 			List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-			List<Product> prodList = _context.Products.Where(u => prodInCart.Contains(u.Id)).ToList();
+			List<Product> prodList =await _context.Products?.Where(u => prodInCart.Contains(u.Id)).ToListAsync();
 
 			ProductUserVM = new()
 			{
-				ApplicationUser = _context.UltrapackUsers.FirstOrDefault(u => u.Id == claim.Value),
+				ApplicationUser =await _context.UltrapackUsers?.FirstOrDefaultAsync(u => u.Id == claim.Value),
 				ProductList = prodList
 			};
 			return View(ProductUserVM); 
@@ -76,7 +77,7 @@ namespace Ultrapack77mvc.Controllers
 		[ActionName("Summary")]
 		public async Task<IActionResult> SummaryPost(ProductUserVM productUserVM)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claimsIdentity = User.Identity as ClaimsIdentity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
 
@@ -134,9 +135,9 @@ namespace Ultrapack77mvc.Controllers
 			HttpContext.Session.Clear();
 			return View();
 		}
-		public async Task<IActionResult> Remove(int id)
+		public IActionResult Remove(int id)
 		{
-			List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+			List<ShoppingCart>? shoppingCartList = new();
 			if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null &&
 				HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Count() > 0)
 			{

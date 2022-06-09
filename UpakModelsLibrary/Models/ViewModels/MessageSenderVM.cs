@@ -1,21 +1,28 @@
 ﻿using MailKit.Net.Smtp;
 
-using Microsoft.AspNetCore.Identity.UI.Services;
-
 using MimeKit;
 
-namespace UpakUtilitiesLibrary.Utility.EmailServices
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using UpakUtilitiesLibrary;
+using UpakUtilitiesLibrary.Utility.EmailServices;
+
+namespace UpakModelsLibrary.Models.ViewModels
 {
-    public class EmailSender : IEmailSender
-    {
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
-            return Execute(email, subject, htmlMessage);
-        }
-        public async Task Execute(string email, string subject, string message)
+	public class MessageSenderVM
+	{
+		public string? Email { get; set; }
+		public string? Subject { get; set; }
+		public string? Message { get; set; }
+		public async Task SendMessage(string email, string subject, string message)
         {
             var emailMessage = new MimeMessage();
             var settings = new Settings();
+            settings.EmailSettings.FromTitle = "Заказ Upak77";
 
             emailMessage.From.Add(new MailboxAddress(settings.EmailSettings.FromTitle, settings.EmailSettings.FromEmail));
             emailMessage.To.Add(new MailboxAddress("", email));
@@ -25,7 +32,7 @@ namespace UpakUtilitiesLibrary.Utility.EmailServices
                 Text = message
             };
 
-            using(var client = new SmtpClient())
+            using (var client = new SmtpClient())
             {
                 await client.ConnectAsync(settings.EmailSettings.SmtpClientAdress, 25, false);
                 await client.AuthenticateAsync(settings.EmailSettings.AuthLogin, settings.EmailSettings.AuthPass);

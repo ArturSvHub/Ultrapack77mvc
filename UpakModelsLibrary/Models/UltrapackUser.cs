@@ -5,6 +5,6 @@ namespace UpakModelsLibrary.Models
 {
 	public class UltrapackUser:IdentityUser
 	{
-		public string FullName { get; set; }
+		public string? FullName { get; set; }
 	}
 }
